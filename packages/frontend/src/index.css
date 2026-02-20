@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-950 text-gray-100 antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-900;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-500;
+  }
+}
+
+@layer components {
+  .prose-dark {
+    @apply prose prose-invert prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700
+           prose-code:text-emerald-400 prose-headings:text-white prose-p:text-gray-300
+           prose-li:text-gray-300 prose-strong:text-white max-w-none;
+  }
+}
