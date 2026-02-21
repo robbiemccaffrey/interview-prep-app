@@ -108,9 +108,9 @@ export default function Practice() {
             <Link
               key={problem.id}
               to={`/practice/${problem.id}`}
-              className="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-xl px-5 py-4 hover:border-emerald-500 transition-all group"
+              className="flex items-center justify-between bg-gray-900 border border-gray-800 rounded-xl px-4 sm:px-5 py-3 sm:py-4 hover:border-emerald-500 transition-all group gap-3"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
                     done
@@ -128,15 +128,17 @@ export default function Practice() {
                     </svg>
                   )}
                 </div>
-                <div>
-                  <span className="text-white font-medium group-hover:text-emerald-400 transition-colors">
+                <div className="min-w-0">
+                  <span className="text-white font-medium group-hover:text-emerald-400 transition-colors text-sm sm:text-base">
                     {problem.title}
                   </span>
-                  <span className="text-gray-500 text-sm ml-2">{problem.category}</span>
+                  <span className="text-gray-500 text-xs sm:text-sm ml-0 sm:ml-2 block sm:inline">
+                    {problem.category}
+                  </span>
                 </div>
               </div>
               <span
-                className={`text-xs font-medium px-2.5 py-1 rounded-full border capitalize ${
+                className={`text-xs font-medium px-2.5 py-1 rounded-full border capitalize shrink-0 ${
                   DIFFICULTY_COLORS[problem.difficulty]
                 }`}
               >

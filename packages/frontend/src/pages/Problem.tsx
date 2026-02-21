@@ -25,6 +25,7 @@ export default function Problem() {
   const [testResult, setTestResult] = useState<RunResult | null>(null);
   const [showSolution, setShowSolution] = useState(false);
   const [openHint, setOpenHint] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'description' | 'editor' | 'tests'>('editor');
   const getCodeRef = useRef<(() => string) | null>(null);
 
   useEffect(() => {
@@ -64,27 +65,27 @@ export default function Problem() {
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 bg-gray-950 shrink-0">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 bg-gray-950 shrink-0 min-w-0">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0">
           <Link
             to="/practice"
-            className="text-gray-400 hover:text-white transition-colors text-sm"
+            className="text-gray-400 hover:text-white transition-colors text-sm shrink-0"
           >
-            ← Practice
+            ←<span className="hidden sm:inline"> Practice</span>
           </Link>
-          <span className="text-gray-700">/</span>
-          <span className="text-white font-medium text-sm">{problem.title}</span>
+          <span className="text-gray-700 shrink-0">/</span>
+          <span className="text-white font-medium text-sm truncate">{problem.title}</span>
           <span
-            className={`text-xs font-medium px-2 py-0.5 rounded-full border capitalize ${
+            className={`text-xs font-medium px-2 py-0.5 rounded-full border capitalize shrink-0 ${
               DIFFICULTY_COLORS[problem.difficulty]
             }`}
           >
             {problem.difficulty}
           </span>
-          <span className="text-xs text-gray-500">{problem.category}</span>
+          <span className="text-xs text-gray-500 hidden md:inline shrink-0">{problem.category}</span>
         </div>
         {done && (
-          <div className="flex items-center gap-1.5 text-emerald-400 text-sm">
+          <div className="flex items-center gap-1.5 text-emerald-400 text-sm shrink-0 ml-2">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
@@ -92,15 +93,32 @@ export default function Problem() {
                 clipRule="evenodd"
               />
             </svg>
-            Solved
+            <span className="hidden sm:inline">Solved</span>
           </div>
         )}
       </div>
 
-      {/* 3-pane layout */}
-      <div className="flex-1 flex overflow-hidden">
+      {/* Mobile tab bar */}
+      <div className="flex md:hidden border-b border-gray-800 bg-gray-900 shrink-0">
+        {(['description', 'editor', 'tests'] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 px-3 py-2.5 text-sm font-medium transition-colors ${
+              activeTab === tab
+                ? 'text-emerald-400 border-b-2 border-emerald-400'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            {tab === 'description' ? 'Problem' : tab === 'editor' ? 'Code' : 'Tests'}
+          </button>
+        ))}
+      </div>
+
+      {/* 3-pane layout (desktop) / tabbed layout (mobile) */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left pane — Problem description */}
-        <div className="w-[340px] shrink-0 flex flex-col border-r border-gray-800 overflow-y-auto bg-gray-950">
+        <div className={`${activeTab === 'description' ? 'flex' : 'hidden'} md:flex md:w-[340px] md:shrink-0 flex-col md:border-r border-gray-800 overflow-y-auto bg-gray-950`}>
           <div className="p-5 flex-1">
             <ReactMarkdown
               className="prose-dark text-sm"
@@ -159,7 +177,7 @@ export default function Problem() {
         </div>
 
         {/* Middle pane — Editor */}
-        <div className="flex-1 flex flex-col overflow-hidden border-r border-gray-800">
+        <div className={`${activeTab === 'editor' ? 'flex' : 'hidden'} md:flex md:flex-1 flex-col overflow-hidden md:border-r border-gray-800`}>
           <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-gray-900 shrink-0">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
@@ -212,7 +230,7 @@ export default function Problem() {
         </div>
 
         {/* Right pane — Test output */}
-        <div className="w-[320px] shrink-0 flex flex-col bg-gray-950">
+        <div className={`${activeTab === 'tests' ? 'flex' : 'hidden'} md:flex md:w-[320px] md:shrink-0 flex-col bg-gray-950`}>
           <div className="px-4 py-2 border-b border-gray-800 bg-gray-900 shrink-0">
             <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">
               Test Output
