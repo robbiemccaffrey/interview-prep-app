@@ -207,7 +207,10 @@ export default function Problem() {
             <TestRunner
               getCode={() => getCodeRef.current?.() ?? code}
               testCode={problem.testCode}
-              onResult={setTestResult}
+              onResult={(result) => {
+                setTestResult(result);
+                if (window.innerWidth < 768) setActiveTab('tests');
+              }}
               onAllPassed={handleAllPassed}
             />
 
