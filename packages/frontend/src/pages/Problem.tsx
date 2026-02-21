@@ -116,9 +116,9 @@ export default function Problem() {
       </div>
 
       {/* 3-pane layout (desktop) / tabbed layout (mobile) */}
-      <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
+      <div className="flex-1 overflow-hidden min-h-0 relative md:flex md:flex-row">
         {/* Left pane — Problem description */}
-        <div className={`${activeTab === 'description' ? 'flex' : 'hidden'} md:flex flex-1 min-h-0 md:flex-none md:w-[340px] md:shrink-0 flex-col md:border-r border-gray-800 overflow-y-auto bg-gray-950`}>
+        <div className={`${activeTab === 'description' ? 'absolute inset-0 flex' : 'hidden'} md:static md:flex md:w-[340px] md:shrink-0 flex-col md:border-r border-gray-800 overflow-y-auto bg-gray-950`}>
           <div className="p-5 flex-1">
             <ReactMarkdown
               className="prose-dark text-sm"
@@ -177,7 +177,7 @@ export default function Problem() {
         </div>
 
         {/* Middle pane — Editor */}
-        <div className={`${activeTab === 'editor' ? 'flex' : 'hidden'} md:flex flex-1 min-h-0 flex-col overflow-hidden md:border-r border-gray-800`}>
+        <div className={`${activeTab === 'editor' ? 'absolute inset-0 flex' : 'hidden'} md:static md:flex md:flex-1 flex-col overflow-hidden md:border-r border-gray-800`}>
           <div className="flex items-center justify-between px-4 py-2 border-b border-gray-800 bg-gray-900 shrink-0">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
@@ -233,7 +233,7 @@ export default function Problem() {
         </div>
 
         {/* Right pane — Test output */}
-        <div className={`${activeTab === 'tests' ? 'flex' : 'hidden'} md:flex flex-1 min-h-0 md:flex-none md:w-[320px] md:shrink-0 flex-col bg-gray-950`}>
+        <div className={`${activeTab === 'tests' ? 'absolute inset-0 flex' : 'hidden'} md:static md:flex md:w-[320px] md:shrink-0 flex-col bg-gray-950`}>
           <div className="px-4 py-2 border-b border-gray-800 bg-gray-900 shrink-0">
             <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">
               Test Output
