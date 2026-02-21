@@ -11,7 +11,7 @@ export default function Home() {
       <div className="mb-8">
         <span className="text-6xl font-mono text-emerald-400">{'</>'}</span>
       </div>
-      <h1 className="text-4xl font-bold text-white mb-4">Interview Prep</h1>
+      <h1 className="text-4xl font-bold text-white mb-4">SWE Interview Prep</h1>
       <p className="text-gray-400 text-lg mb-12 max-w-xl mx-auto">
         Master data structures, algorithms, and real-world coding problems. Run Python code
         directly in your browser.
