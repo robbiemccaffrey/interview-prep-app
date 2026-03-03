@@ -48,9 +48,16 @@ export default function Debug() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Debug</h1>
+        <p className="text-gray-400 mb-3">
+          Debugging sessions are an increasingly common part of the software engineering interview
+          process. Companies use them to evaluate how you navigate unfamiliar codebases, reason about
+          unexpected behavior, and isolate root causes under time pressure — skills that are hard to
+          assess with traditional algorithmic questions.
+        </p>
         <p className="text-gray-400">
-          {debugExercises.length} real-world bugs across TypeScript and Python. Find and fix the bug,
-          then run tests to verify your fix.
+          Practice with {debugExercises.length} real-world bugs across TypeScript and Python. Each
+          exercise drops you into a buggy codebase with a symptom description and failing tests. Find
+          the bug, fix it, and run the tests to verify.
         </p>
       </div>
 
