@@ -27,7 +27,7 @@ async function loadTypeScript(): Promise<TSCompiler> {
   if (loadingPromise) return loadingPromise;
 
   loadingPromise = (async () => {
-    const ts = (window as Record<string, unknown>).ts as TSCompiler;
+    const ts = (window as unknown as Record<string, unknown>).ts as TSCompiler;
     tsCompiler = ts;
     return ts;
   })();
@@ -212,7 +212,7 @@ export function useTypeScript() {
   useEffect(() => {
     setStatus('loading');
 
-    if (!(window as Record<string, unknown>).ts) {
+    if (!(window as unknown as Record<string, unknown>).ts) {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/typescript@5.3.3/lib/typescript.min.js';
       script.onload = () => {
