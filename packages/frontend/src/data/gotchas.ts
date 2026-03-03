@@ -583,6 +583,46 @@ try {
   console.error("Failed:", err);
 }
 \`\`\`
+
+---
+
+### 11. Date Gotchas (Months Are 0-Indexed)
+
+**The trap:**
+\`\`\`typescript
+// "I want January 31, 2025"
+const date = new Date(2025, 1, 31);
+console.log(date); // March 3, 2025 — what?!
+
+// "I want December"
+const dec = new Date(2025, 12, 1);
+console.log(dec); // January 1, 2026!
+\`\`\`
+
+**What happens:** JavaScript's \`Date\` months are **0-indexed**: January is \`0\`, December is \`11\`. So \`new Date(2025, 1, 31)\` means "February 31" — which overflows to March 3. And month \`12\` overflows to January of the next year. Days and years are 1-indexed as normal, making it even more confusing.
+
+Other surprises:
+- \`getDay()\` returns day of the **week** (0 = Sunday), not day of the month — use \`getDate()\` for that
+- \`getYear()\` returns years since 1900 (deprecated) — use \`getFullYear()\`
+- Parsing date strings (\`new Date("2025-01-15")\`) is treated as **UTC**, but \`new Date("01/15/2025")\` is **local time**
+
+**The fix:**
+\`\`\`typescript
+// Remember: month is 0-indexed
+const jan31 = new Date(2025, 0, 31); // January 31, 2025
+
+// Use named constants to make it readable
+const JANUARY = 0, FEBRUARY = 1, MARCH = 2; // ... etc
+const date = new Date(2025, JANUARY, 31);
+
+// Or use ISO strings (always UTC, months are 1-indexed as expected)
+const date2 = new Date("2025-01-31T00:00:00");
+
+// getDate() for day of month, getDay() for weekday
+console.log(date.getDate());     // 31
+console.log(date.getDay());      // 5 (Friday)
+console.log(date.getFullYear()); // 2025 (not getYear()!)
+\`\`\`
 `,
   },
   {
