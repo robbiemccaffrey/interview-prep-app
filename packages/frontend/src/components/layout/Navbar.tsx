@@ -33,6 +33,15 @@ export default function Navbar() {
           {navLink('/gotchas', 'Gotchas')}
           {navLink('/real-world', 'Real World')}
           {navLink('/big-o', 'Big O')}
+          <a
+            href="https://paypal.me/robbiemc8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-2 px-2 sm:px-3 py-1 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-medium transition-colors"
+          >
+            <span className="sm:hidden">☕</span>
+            <span className="hidden sm:inline">☕ Buy me a coffee</span>
+          </a>
         </div>
       </div>
     </nav>
