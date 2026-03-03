@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useProgress } from '../hooks/useProgress';
 import { problems } from '../data/problems';
+import { debugExercises } from '../data/debugExercises';
 
 export default function Home() {
   const { completedProblems } = useProgress();
@@ -43,6 +44,20 @@ export default function Home() {
           <p className="text-gray-400 text-sm">
             {problems.filter((p) => p.category !== 'Real World').length} coding problems with a
             live Python runner. Easy, medium, and hard.
+          </p>
+        </Link>
+
+        <Link
+          to="/debug"
+          className="bg-gray-900 border border-gray-700 rounded-xl p-8 hover:border-orange-600 transition-colors group"
+        >
+          <div className="text-3xl mb-4">🐛</div>
+          <h2 className="text-xl font-semibold text-white mb-2 group-hover:text-orange-400 transition-colors">
+            Debug
+          </h2>
+          <p className="text-gray-400 text-sm">
+            {debugExercises.length} real-world bugs in TypeScript &amp; Python. Find the bug, fix it,
+            run tests.
           </p>
         </Link>
 
@@ -93,11 +108,12 @@ export default function Home() {
         </div>
       )}
 
-      <div className="mt-16 grid grid-cols-3 gap-8 text-center">
+      <div className="mt-16 grid grid-cols-4 gap-8 text-center">
         {[
           { label: 'Topics', value: '10' },
           { label: 'Problems', value: String(problems.length) },
-          { label: 'In-Browser Python', value: '✓' },
+          { label: 'Debug Exercises', value: String(debugExercises.length) },
+          { label: 'In-Browser TS + PY', value: '✓' },
         ].map(({ label, value }) => (
           <div key={label}>
             <div className="text-2xl font-bold text-emerald-400 font-mono">{value}</div>

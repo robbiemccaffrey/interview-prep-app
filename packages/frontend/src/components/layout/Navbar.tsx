@@ -29,6 +29,7 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           {navLink('/learn', 'Learn')}
           {navLink('/practice', 'Practice')}
+          {navLink('/debug', 'Debug')}
           {navLink('/real-world', 'Real World')}
           {navLink('/big-o', 'Big O')}
         </div>

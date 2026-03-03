@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 interface Progress {
   completedProblems: string[];
-  savedCode: Record<string, string>;
+  savedCode: Record<string, string | Record<string, string>>;
 }
 
 const STORAGE_KEY = 'interview-prep-progress';
@@ -52,7 +52,25 @@ export function useProgress() {
   );
 
   const getSavedCode = useCallback(
-    (problemId: string) => progress.savedCode[problemId] ?? null,
+    (problemId: string) => {
+      const val = progress.savedCode[problemId];
+      return typeof val === 'string' ? val : null;
+    },
+    [progress]
+  );
+
+  const saveDebugCode = useCallback((exerciseId: string, files: Record<string, string>) => {
+    setProgress((prev) => ({
+      ...prev,
+      savedCode: { ...prev.savedCode, [exerciseId]: files },
+    }));
+  }, []);
+
+  const getSavedDebugCode = useCallback(
+    (exerciseId: string): Record<string, string> | null => {
+      const val = progress.savedCode[exerciseId];
+      return val && typeof val === 'object' ? val as Record<string, string> : null;
+    },
     [progress]
   );
 
@@ -62,5 +80,7 @@ export function useProgress() {
     saveCode,
     isComplete,
     getSavedCode,
+    saveDebugCode,
+    getSavedDebugCode,
   };
 }

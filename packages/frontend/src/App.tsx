@@ -7,6 +7,8 @@ import Practice from './pages/Practice';
 import Problem from './pages/Problem';
 import RealWorld from './pages/RealWorld';
 import BigO from './pages/BigO';
+import Debug from './pages/Debug';
+import DebugExercise from './pages/DebugExercise';
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
             <Route path="/practice/:problemId" element={<Problem />} />
             <Route path="/real-world" element={<RealWorld />} />
             <Route path="/big-o" element={<BigO />} />
+            <Route path="/debug" element={<Debug />} />
+            <Route path="/debug/:exerciseId" element={<DebugExercise />} />
           </Routes>
         </main>
       </div>
