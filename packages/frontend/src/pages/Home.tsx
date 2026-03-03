@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useProgress } from '../hooks/useProgress';
 import { problems } from '../data/problems';
 import { debugExercises } from '../data/debugExercises';
+import { gotchas } from '../data/gotchas';
 
 export default function Home() {
   const { completedProblems } = useProgress();
@@ -100,6 +101,20 @@ export default function Home() {
             <p className="text-gray-400 text-sm">
               30 code examples — identify the time and space complexity. Instant feedback with
               explanations.
+            </p>
+          </Link>
+
+          <Link
+            to="/gotchas"
+            className="bg-gray-900 border border-gray-700 rounded-xl p-6 hover:border-rose-600 transition-colors group"
+          >
+            <div className="text-2xl mb-3">🚩</div>
+            <h3 className="text-base font-semibold text-white mb-1 group-hover:text-rose-400 transition-colors">
+              Gotchas
+            </h3>
+            <p className="text-gray-400 text-sm">
+              {gotchas.length} topics — the most common pitfalls in Python, TypeScript, and React
+              that trip people up.
             </p>
           </Link>
         </div>

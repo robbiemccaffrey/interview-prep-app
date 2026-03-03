@@ -9,6 +9,8 @@ import RealWorld from './pages/RealWorld';
 import BigO from './pages/BigO';
 import Debug from './pages/Debug';
 import DebugExercise from './pages/DebugExercise';
+import Gotchas from './pages/Gotchas';
+import GotchaTopic from './pages/GotchaTopic';
 
 export default function App() {
   return (
@@ -26,6 +28,8 @@ export default function App() {
             <Route path="/big-o" element={<BigO />} />
             <Route path="/debug" element={<Debug />} />
             <Route path="/debug/:exerciseId" element={<DebugExercise />} />
+            <Route path="/gotchas" element={<Gotchas />} />
+            <Route path="/gotchas/:topicId" element={<GotchaTopic />} />
           </Routes>
         </main>
       </div>

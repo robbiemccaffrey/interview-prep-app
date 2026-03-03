@@ -30,6 +30,7 @@ export default function Navbar() {
           {navLink('/learn', 'Learn')}
           {navLink('/practice', 'Practice')}
           {navLink('/debug', 'Debug')}
+          {navLink('/gotchas', 'Gotchas')}
           {navLink('/real-world', 'Real World')}
           {navLink('/big-o', 'Big O')}
         </div>
