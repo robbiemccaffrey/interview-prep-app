@@ -48,7 +48,7 @@ interface IncidentData {
 }
 
 interface TriageRequest {
-  policyName: string;  // BUG: type says "policyName"
+  policyName: string;
   incidentIds?: string[];
 }
 
@@ -81,7 +81,7 @@ export function handleTriageRequest(
   incidents: IncidentData[]
 ): TriageResponse {
   // Cast to TriageRequest type and destructure
-  const { policyName } = requestBody as TriageRequest;  // BUG: reads "policyName" but body has "policyType"
+  const { policyName } = requestBody as TriageRequest;
   const policy = createPolicy(policyName);
 
   const results = incidents.map((i) => ({
@@ -107,7 +107,7 @@ interface IncidentData {
 }
 
 interface TriageRequest {
-  policyType: string;  // FIX: aligned with what frontend sends
+  policyType: string;
   incidentIds?: string[];
 }
 
@@ -139,7 +139,7 @@ export function handleTriageRequest(
   requestBody: Record<string, unknown>,
   incidents: IncidentData[]
 ): TriageResponse {
-  const { policyType } = requestBody as TriageRequest;  // FIX: reads "policyType" to match body
+  const { policyType } = requestBody as TriageRequest;
   const policy = createPolicy(policyType);
 
   const results = incidents.map((i) => ({
@@ -232,7 +232,7 @@ Since \`policyName\` is always \`undefined\`, \`createPolicy(undefined)\` falls 
 Align the field name to \`policyType\` in both the type and the destructuring:
 \`\`\`typescript
 interface TriageRequest {
-  policyType: string;  // was: policyName
+  policyType: string;
 }
 const { policyType } = requestBody as TriageRequest;
 \`\`\``,
@@ -320,7 +320,7 @@ export class SafetyCriticalPolicy extends Policy {
   }
 
   applySeverityWeight(currentScore: number, incident: IncidentData, breakdown: ScoreBreakdownItem[]): number {
-    const multiplier = incident.severity * 3;  // BUG: no clamp! severity 5 => multiplier 15
+    const multiplier = incident.severity * 3;
     const weighted = currentScore * (multiplier / 5);
     breakdown.push({ factor: 'safety_severity_weight', value: weighted - currentScore, description: \`Safety severity multiplier (\${multiplier})\` });
     return weighted;
@@ -374,7 +374,7 @@ export class SafetyCriticalPolicy extends Policy {
   }
 
   applySeverityWeight(currentScore: number, incident: IncidentData, breakdown: ScoreBreakdownItem[]): number {
-    const multiplier = Math.min(incident.severity * 3, 10);  // FIX: added clamp
+    const multiplier = Math.min(incident.severity * 3, 10);
     const weighted = currentScore * (multiplier / 5);
     breakdown.push({ factor: 'safety_severity_weight', value: weighted - currentScore, description: \`Safety severity multiplier (\${multiplier})\` });
     return weighted;
@@ -504,7 +504,7 @@ export class IncidentApiClient extends BaseApiClient {
   }
 
   async fetchIncident(id: string): Promise<any> {
-    return this.get(\`/incidents/\${id}\`).catch(this.handleError);  // BUG: \`this\` is lost
+    return this.get(\`/incidents/\${id}\`).catch(this.handleError);
   }
 }`,
         solutionCode: `// ---- Base API Client ----
@@ -534,7 +534,7 @@ export class IncidentApiClient extends BaseApiClient {
   }
 
   async fetchIncident(id: string): Promise<any> {
-    return this.get(\`/incidents/\${id}\`).catch((e) => this.handleError(e));  // FIX: arrow wrapper preserves \`this\`
+    return this.get(\`/incidents/\${id}\`).catch((e) => this.handleError(e));
   }
 }`,
       },
@@ -653,7 +653,7 @@ export function runTriage(incidents: { id: string; severity: number }[]): Triage
     recommendedAction: i.severity >= 4 ? 'escalate' : 'monitor',
   }));
 
-  results.sort((a, b) => a.score - b.score);  // BUG: ascending order (lowest first)
+  results.sort((a, b) => a.score - b.score);
 
   return { results, policyUsed: 'standard' };
 }`,
@@ -677,7 +677,7 @@ export function runTriage(incidents: { id: string; severity: number }[]): Triage
     recommendedAction: i.severity >= 4 ? 'escalate' : 'monitor',
   }));
 
-  results.sort((a, b) => b.score - a.score);  // FIX: descending order (highest first)
+  results.sort((a, b) => b.score - a.score);
 
   return { results, policyUsed: 'standard' };
 }`,
@@ -794,7 +794,7 @@ interface ScoreBreakdownItem {
 // ---- Standard Policy ----
 export class StandardPolicy {
   baseScore(incident: IncidentData, breakdown: ScoreBreakdownItem[]): number {
-    const base = (incident.severity - 1) * 10;  // BUG: severity 1 => 0
+    const base = (incident.severity - 1) * 10;
     breakdown.push({
       factor: 'base_score',
       value: base,
@@ -835,7 +835,7 @@ interface ScoreBreakdownItem {
 // ---- Standard Policy ----
 export class StandardPolicy {
   baseScore(incident: IncidentData, breakdown: ScoreBreakdownItem[]): number {
-    const base = incident.severity * 10;  // FIX: no off-by-one
+    const base = incident.severity * 10;
     breakdown.push({
       factor: 'base_score',
       value: base,
@@ -995,7 +995,7 @@ export class EnterprisePolicy {
     const deadline = new Date(incident.slaDeadline);
     const hoursUntilDeadline = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
 
-    if (hoursUntilDeadline > 0) {  // BUG: > 0 means deadline is in the future (NOT overdue)
+    if (hoursUntilDeadline > 0) {
       const penalty = 20;
       breakdown.push({
         factor: 'enterprise_sla_penalty',
@@ -1036,7 +1036,7 @@ export class EnterprisePolicy {
     const deadline = new Date(incident.slaDeadline);
     const hoursUntilDeadline = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
 
-    if (hoursUntilDeadline < 0) {  // FIX: < 0 means deadline has passed (IS overdue)
+    if (hoursUntilDeadline < 0) {
       const penalty = 20;
       breakdown.push({
         factor: 'enterprise_sla_penalty',
@@ -1214,7 +1214,7 @@ export class AuditedRepository implements IncidentRepository {
 
   async findByStatus(status: string): Promise<IncidentData[]> {
     this.log(\`findByStatus(\${status})\`);
-    return this.inner.findAll();  // BUG: should be this.inner.findByStatus(status)
+    return this.inner.findAll();
   }
 
   getAuditLog() {
@@ -1281,7 +1281,7 @@ export class AuditedRepository implements IncidentRepository {
 
   async findByStatus(status: string): Promise<IncidentData[]> {
     this.log(\`findByStatus(\${status})\`);
-    return this.inner.findByStatus(status);  // FIX: delegates correctly
+    return this.inner.findByStatus(status);
   }
 
   getAuditLog() {
@@ -1424,7 +1424,6 @@ export class ExperimentalPolicy {
       incidentId: incident.id,
       score: rawScore,
       recommendedAction: rawScore > 50 ? 'escalate_immediately' : 'monitor',
-      // BUG: missing "breakdown" field
     };
 
     return result as ScoreResult;  // "as" silences TypeScript
@@ -1470,7 +1469,7 @@ export class ExperimentalPolicy {
       recommendedAction: rawScore > 50 ? 'escalate_immediately' : 'monitor',
       breakdown: [
         { factor: 'experimental', value: rawScore, description: 'ML-based score' },
-      ],  // FIX: breakdown included
+      ],
     };
   }
 }
@@ -1616,13 +1615,13 @@ export function useIncidents(client: IncidentApiClient, statusFilter: string): {
 
   // Simulate: effect only depends on client, NOT statusFilter
   // This means filter changes don't trigger a re-fetch
-  const effectDeps = [client];  // BUG: missing statusFilter
+  const effectDeps = [client];
 
   // Simulate single fetch (effect ran once)
   callCount++;
 
   // Without statusFilter in deps, filtering uses initial "all" value
-  const capturedFilter = 'all';  // BUG: stale closure - always uses initial value
+  const capturedFilter = 'all';
 
   // Fetch and filter
   const data = syncFetchIncidents(client);
@@ -1666,12 +1665,10 @@ export function useIncidents(client: IncidentApiClient, statusFilter: string): {
   let allData: IncidentData[] = [];
   let callCount = 0;
 
-  // FIX: effect depends on both client AND statusFilter
   const effectDeps = [client, statusFilter];
 
   callCount++;
 
-  // FIX: uses the actual current statusFilter value
   const capturedFilter = statusFilter;
 
   const data = syncFetchIncidents(client);
@@ -1817,7 +1814,7 @@ export class OutageIncidentCard {
       },
       {
         label: 'Uptime SLA',
-        value: \`\${(this.incident.metadata as Record<string, number>).uptimeSla * 100}%\`,  // BUG: uptimeSla is undefined => NaN%
+        value: \`\${(this.incident.metadata as Record<string, number>).uptimeSla * 100}%\`,
       },
     ];
   }
@@ -1857,7 +1854,7 @@ export class OutageIncidentCard {
         label: 'Uptime SLA',
         value: (this.incident.metadata as any).uptimeSla != null
           ? \`\${(this.incident.metadata as any).uptimeSla * 100}%\`
-          : 'N/A',  // FIX: null check with fallback
+          : 'N/A',
       },
     ];
   }
@@ -2036,7 +2033,7 @@ export function runBuggyTest(): { passed: boolean; actual: number; expected: num
   const incident: IncidentData = { id: 'TEST-001', severity: 1 as Severity, assignee: 'tester' };
   const result = policy.score(incident);
 
-  const expected = 0;  // BUG: expects 0, but correct score is 4
+  const expected = 0;
   return { passed: result.score === expected, actual: result.score, expected };
 }`,
         solutionCode: `// ---- Types ----
@@ -2083,7 +2080,7 @@ export function runBuggyTest(): { passed: boolean; actual: number; expected: num
   const incident: IncidentData = { id: 'TEST-001', severity: 1 as Severity, assignee: 'tester' };
   const result = policy.score(incident);
 
-  const expected = 4;  // FIX: severity 1 => base 10, weight min(2,10)=2, weighted = 10*(2/5) = 4
+  const expected = 4;
   return { passed: result.score === expected, actual: result.score, expected };
 }`,
       },
@@ -2188,7 +2185,7 @@ export function parseIncidentDate(incident: IncidentData): Date {
 // ---- Buggy assertion function ----
 export function assertDateParsedCorrectly(incident: IncidentData): { passed: boolean; actual: number; expected: number } {
   const date = parseIncidentDate(incident);
-  const actual = date.getHours();  // BUG: local timezone, not UTC
+  const actual = date.getHours();
   const expected = 10;
   return { passed: actual === expected, actual, expected };
 }`,
@@ -2206,7 +2203,7 @@ export function parseIncidentDate(incident: IncidentData): Date {
 // ---- Fixed assertion function ----
 export function assertDateParsedCorrectly(incident: IncidentData): { passed: boolean; actual: number; expected: number } {
   const date = parseIncidentDate(incident);
-  const actual = date.getUTCHours();  // FIX: use UTC hours
+  const actual = date.getUTCHours();
   const expected = 10;
   return { passed: actual === expected, actual, expected };
 }`,

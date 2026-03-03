@@ -59,7 +59,6 @@ abstract class Track {
     this.genre = data.genre;
     this.durationSeconds = data.durationSeconds;
     this.playCount = data.playCount;
-    // BUG: Calls abstract method before subclass fields are initialized
     this.genreCode = this.computeGenreCode();
   }
 
@@ -104,7 +103,6 @@ abstract class Track {
   public readonly genre: string;
   public readonly durationSeconds: number;
   public readonly playCount: number;
-  // FIX: Use lazy getter instead of eager computation in constructor
   private _genreCode?: string;
 
   constructor(data: TrackData) {
@@ -321,7 +319,6 @@ type TrackConstructor = new (data: TrackData) => Track;
 class TrackFactory {
   private static registry: Record<TrackType, TrackConstructor> = {
     song: Song,
-    // BUG: podcast is mapped to MusicVideo instead of Podcast
     podcast: MusicVideo,
     music_video: MusicVideo,
     live_performance: LivePerformance,
@@ -431,7 +428,6 @@ type TrackConstructor = new (data: TrackData) => Track;
 class TrackFactory {
   private static registry: Record<TrackType, TrackConstructor> = {
     song: Song,
-    // FIX: podcast mapped to Podcast (was MusicVideo)
     podcast: Podcast,
     music_video: MusicVideo,
     live_performance: LivePerformance,
@@ -559,7 +555,6 @@ class PremiumTier extends Subscription {
   getPerStreamRate(): number { return 0.005; }
 
   override calculateStreamCost(baseRate: number): number {
-    // BUG: this.discountRate resolves to FamilyTier's 0.5 when called via super from FamilyTier
     return baseRate * (1 - this.discountRate);
   }
 }
@@ -575,7 +570,6 @@ class FamilyTier extends PremiumTier {
   override getPerStreamRate(): number { return 0.004; }
 
   override calculateStreamCost(baseRate: number): number {
-    // BUG: super.calculateStreamCost uses this.discountRate which is 0.5 (FamilyTier's)
     // So this computes: baseRate * (1 - 0.5) * (1 - 0.3) = baseRate * 0.35 (65% off)
     // Instead of intended: baseRate * (1 - 0.2) * (1 - 0.3) = baseRate * 0.56 (44% off)
     const premiumCost = super.calculateStreamCost(baseRate);
@@ -628,7 +622,6 @@ class FamilyTier extends PremiumTier {
   override getTier(): string { return 'family'; }
   override getPerStreamRate(): number { return 0.004; }
 
-  // FIX: Calculate independently instead of calling super
   // Intent: Premium discount (20%) + family group discount (30%)
   // baseRate * (1 - 0.2) * (1 - 0.3) = baseRate * 0.56
   override calculateStreamCost(baseRate: number): number {
@@ -761,7 +754,6 @@ class Playlist {
 }
 
 class CuratedPlaylist extends Playlist {
-  // BUG: Uses setMonth instead of setMinutes
   protected override estimateEndTime(totalMinutes: number): Date {
     const now = new Date();
     now.setMonth(now.getMonth() + totalMinutes);
@@ -818,7 +810,6 @@ class Playlist {
 }
 
 class CuratedPlaylist extends Playlist {
-  // FIX: Use setMinutes instead of setMonth
   protected override estimateEndTime(totalMinutes: number): Date {
     const now = new Date();
     now.setMinutes(now.getMinutes() + totalMinutes);
@@ -943,7 +934,6 @@ class MusicVideo {
     this.status = data.status;
   }
 
-  // BUG: >= 0 is always true because length is never negative
   isStreamable(): boolean {
     return this.availableRegions.length >= 0;
   }
@@ -982,7 +972,6 @@ class MusicVideo {
     this.status = data.status;
   }
 
-  // FIX: Use > 0 instead of >= 0
   isStreamable(): boolean {
     return this.availableRegions.length > 0;
   }
@@ -1120,7 +1109,6 @@ class CatalogHook {
     this.runEffect();
   }
 
-  // BUG: Effect dependencies only check a static value, not the filters
   private getEffectDeps(): string {
     // Simulates [client] -- filters are NOT in the dependency array
     return 'client-v1';
@@ -1138,7 +1126,6 @@ class CatalogHook {
       this.lastEffectDeps = deps;
       this.runEffect();
     }
-    // BUG: If deps haven't changed, effect doesn't re-run even though filters changed
   }
 
   setGenre(genre: string): void {
@@ -1205,7 +1192,6 @@ class CatalogHook {
     this.runEffect();
   }
 
-  // FIX: Include genreFilter and typeFilter in dependencies
   private getEffectDeps(): string {
     return \`client-v1|\${this.genreFilter}|\${this.typeFilter}\`;
   }
@@ -1328,7 +1314,6 @@ class BaseApiClient {
   }
 
   public handleError(error: Error): never {
-    // BUG: When called as a callback, 'this' is undefined
     const message = \`[\${this.clientName}] Error: \${error.message}\`;
     throw new Error(message);
   }
@@ -1340,7 +1325,6 @@ class PlaylistApiClient extends BaseApiClient {
   }
 
   async addTrack(playlistId: string, trackId: string): Promise<{ success: boolean }> {
-    // BUG: .catch(this.handleError) loses 'this' binding
     return this.post<{ success: boolean }>(\`/playlists/\${playlistId}/tracks\`, { trackId })
       .catch(this.handleError);
   }
@@ -1380,7 +1364,6 @@ class PlaylistApiClient extends BaseApiClient {
   }
 
   async addTrack(playlistId: string, trackId: string): Promise<{ success: boolean }> {
-    // FIX: Use arrow function to preserve 'this' binding
     return this.post<{ success: boolean }>(\`/playlists/\${playlistId}/tracks\`, { trackId })
       .catch(e => this.handleError(e));
   }
@@ -1499,7 +1482,6 @@ class StreamRoyaltyCalculator {
     };
   }
 
-  // BUG: < should be > -- gives bonus to artists BELOW threshold
   private applyPopularityBonus(artist: ArtistData): number {
     if (artist.monthlyListeners < this.popularityThreshold) {
       return artist.totalStreams * 0.001;
@@ -1554,7 +1536,6 @@ class StreamRoyaltyCalculator {
     };
   }
 
-  // FIX: > instead of < -- bonus goes to artists ABOVE threshold
   private applyPopularityBonus(artist: ArtistData): number {
     if (artist.monthlyListeners > this.popularityThreshold) {
       return artist.totalStreams * 0.001;
@@ -1699,7 +1680,6 @@ class LoggingRepository<T extends HasId> extends RepositoryDecorator<T> {
     return this.inner.findById(id);
   }
 
-  // BUG: Calls findAll() instead of findByType(type)
   override findByType(type: string): T[] {
     this.log.push(\`[\${this.label}] findByType(\${type})\`);
     return this.inner.findAll();
@@ -1776,7 +1756,6 @@ class LoggingRepository<T extends HasId> extends RepositoryDecorator<T> {
     return this.inner.findById(id);
   }
 
-  // FIX: Delegate to findByType instead of findAll
   override findByType(type: string): T[] {
     this.log.push(\`[\${this.label}] findByType(\${type})\`);
     return this.inner.findByType(type);
@@ -1900,7 +1879,6 @@ class LivePerformanceCard {
   }
 
   detailRows(): DetailRow[] {
-    // BUG: this.data.setlist can be undefined -- .map() will throw TypeError
     const setlistDisplay = (this.data.setlist as string[])
       .map((song: string, i: number) => \`\${i + 1}. \${song}\`)
       .join(', ');
@@ -1943,7 +1921,6 @@ class LivePerformanceCard {
   }
 
   detailRows(): DetailRow[] {
-    // FIX: Use nullish coalescing to provide empty array fallback
     const setlistDisplay = (this.data.setlist ?? [])
       .map((song: string, i: number) => \`\${i + 1}. \${song}\`)
       .join(', ');
@@ -2067,7 +2044,6 @@ interface RoyaltyResult {
   netRevenue: number;
 }
 
-// BUG: Uses a - b (ascending) instead of b - a (descending)
 export function sortTracksByPlayCount(tracks: TrackData[]): TrackData[] {
   return [...tracks].sort((a, b) => a.playCount - b.playCount);
 }
@@ -2098,7 +2074,6 @@ interface RoyaltyResult {
   netRevenue: number;
 }
 
-// FIX: Use b - a for descending order (highest first)
 export function sortTracksByPlayCount(tracks: TrackData[]): TrackData[] {
   return [...tracks].sort((a, b) => b.playCount - a.playCount);
 }
@@ -2248,13 +2223,11 @@ class Playlist {
 class CuratedPlaylist extends Playlist {
   protected override estimateEndTime(totalMinutes: number): Date {
     const now = new Date();
-    // This is the FIXED implementation (Bug 4 is already fixed)
     now.setMinutes(now.getMinutes() + totalMinutes);
     return now;
   }
 }
 
-// BUG: The test function validates months instead of minutes
 export function runPlaylistDurationTest(): { totalMinutesCorrect: boolean; endTimeCorrect: boolean } {
   const playlist = new CuratedPlaylist({
     id: 'PL-TEST', name: 'Test Playlist', totalDurationSeconds: 600,
@@ -2263,7 +2236,6 @@ export function runPlaylistDurationTest(): { totalMinutesCorrect: boolean; endTi
 
   const totalMinutesCorrect = result.totalMinutes === 10;
 
-  // BUG: Checking months difference instead of minutes difference
   const endTime = new Date(result.estimatedEndTime);
   const now = new Date();
   const diffMonths = endTime.getMonth() - now.getMonth();
@@ -2322,7 +2294,6 @@ class CuratedPlaylist extends Playlist {
   }
 }
 
-// FIX: Validate minutes difference, not months difference
 export function runPlaylistDurationTest(): { totalMinutesCorrect: boolean; endTimeCorrect: boolean } {
   const playlist = new CuratedPlaylist({
     id: 'PL-TEST', name: 'Test Playlist', totalDurationSeconds: 600,
@@ -2331,7 +2302,6 @@ export function runPlaylistDurationTest(): { totalMinutesCorrect: boolean; endTi
 
   const totalMinutesCorrect = result.totalMinutes === 10;
 
-  // FIX: Check minutes difference using milliseconds, not month comparison
   const endTime = new Date(result.estimatedEndTime);
   const now = new Date();
   const diffMinutes = Math.round((endTime.getTime() - now.getTime()) / (1000 * 60));

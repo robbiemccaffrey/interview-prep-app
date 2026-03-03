@@ -37,7 +37,7 @@ The frontend sends a POST body to the backend. The shared type \`RecommendReques
         language: 'typescript',
         buggyCode: `// ---- Shared Types ----
 interface RecommendRequest {
-  strategyName: string;    // <-- type says "strategyName"
+  strategyName: string;
   courseIds?: string[];
 }
 
@@ -79,7 +79,6 @@ class StrategyFactory {
 async function handleRecommendRequest(
   body: Record<string, unknown>,
 ): Promise<{ strategyUsed: string }> {
-  // BUG: Destructures "strategyName" from body, but frontend sent "strategyType"
   const { strategyName } = body as RecommendRequest;
   const strategy = StrategyFactory.create(strategyName);
 
@@ -87,7 +86,7 @@ async function handleRecommendRequest(
 }`,
         solutionCode: `// ---- Shared Types ----
 interface RecommendRequest {
-  strategyType: string;    // FIXED: was "strategyName"
+  strategyType: string;
   courseIds?: string[];
 }
 
@@ -127,7 +126,6 @@ class StrategyFactory {
 async function handleRecommendRequest(
   body: Record<string, unknown>,
 ): Promise<{ strategyUsed: string }> {
-  // FIXED: Destructure "strategyType" to match what frontend sends
   const { strategyType } = body as RecommendRequest;
   const strategy = StrategyFactory.create(strategyType);
 
@@ -169,7 +167,7 @@ The shared type \`RecommendRequest\` defines \`strategyName: string\`, but the f
 Align the shared type and handler to use \`strategyType\`:
 \`\`\`typescript
 interface RecommendRequest {
-  strategyType: string; // was "strategyName"
+  strategyType: string;
 }
 
 const { strategyType } = body as RecommendRequest;
@@ -271,7 +269,6 @@ class SkillGapStrategy extends Strategy {
     return base;
   }
 
-  // BUG: Override without clamping - multiplier can reach 15 for level 5
   protected applyLevelWeight(
     currentScore: number,
     course: CourseData,
@@ -351,13 +348,12 @@ class SkillGapStrategy extends Strategy {
     return base;
   }
 
-  // FIXED: Added Math.min clamp to keep multiplier <= 10
   protected applyLevelWeight(
     currentScore: number,
     course: CourseData,
     breakdown: ScoreBreakdownItem[],
   ): number {
-    const multiplier = Math.min(course.level * 3, 10); // FIXED: added clamp
+    const multiplier = Math.min(course.level * 3, 10);
     const weighted = currentScore * (multiplier / 5);
     breakdown.push({
       factor: 'skill_gap_level_weight',
@@ -497,7 +493,6 @@ class CourseApiClient extends BaseApiClient {
     super(baseUrl, 'CourseApiClient');
   }
 
-  // BUG: Passes this.handleError as a callback — \`this\` binding is lost
   async fetchCourse(id: string): Promise<unknown> {
     return this.get(\`/courses/\${id}\`).catch(this.handleError);
   }
@@ -527,7 +522,6 @@ class CourseApiClient extends BaseApiClient {
     super(baseUrl, 'CourseApiClient');
   }
 
-  // FIXED: Use arrow function to preserve \`this\` binding
   async fetchCourse(id: string): Promise<unknown> {
     return this.get(\`/courses/\${id}\`).catch((e) => this.handleError(e));
   }
@@ -639,7 +633,6 @@ function generateRecommendations(courseIds: string[]): RecommendResponse {
     recommendedAction: 'browse_later',
   }));
 
-  // BUG: Sorts ascending — lowest scores first
   results.sort((a, b) => a.score - b.score);
 
   return {
@@ -667,7 +660,6 @@ function generateRecommendations(courseIds: string[]): RecommendResponse {
     recommendedAction: 'browse_later',
   }));
 
-  // FIXED: Sort descending — highest scores first
   results.sort((a, b) => b.score - a.score);
 
   return {
@@ -1084,7 +1076,6 @@ class CareerPathStrategy {
     const hoursUntilDeadline =
       (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
 
-    // BUG: > 0 means "deadline is in the future" — penalty applied to wrong courses
     if (hoursUntilDeadline > 0) {
       const penalty = 20;
       breakdown.push({
@@ -1128,7 +1119,6 @@ class CareerPathStrategy {
     const hoursUntilDeadline =
       (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
 
-    // FIXED: < 0 means "deadline has passed" — penalty now applies correctly
     if (hoursUntilDeadline < 0) {
       const penalty = 20;
       breakdown.push({
@@ -1298,7 +1288,6 @@ class AuditedRepository implements CourseRepository {
     return this.inner.findById(id);
   }
 
-  // BUG: Calls findAll() instead of findByCategory(category)
   async findByCategory(category: string): Promise<CourseData[]> {
     this.log(\`findByCategory(\${category})\`);
     return this.inner.findAll();
@@ -1366,7 +1355,6 @@ class AuditedRepository implements CourseRepository {
     return this.inner.findById(id);
   }
 
-  // FIXED: Delegates to findByCategory instead of findAll
   async findByCategory(category: string): Promise<CourseData[]> {
     this.log(\`findByCategory(\${category})\`);
     return this.inner.findByCategory(category);
@@ -1518,7 +1506,6 @@ class ExperimentalStrategy extends Strategy {
     return base;
   }
 
-  // BUG: Overrides template method, returns object without \`breakdown\` field
   // Uses \`as ScoreResult\` to silence TypeScript
   score(course: CourseData): ScoreResult {
     const rawScore = course.level * 20 + (course.instructor ? 0 : 10);
@@ -1585,7 +1572,6 @@ class ExperimentalStrategy extends Strategy {
     return base;
   }
 
-  // FIXED: Include breakdown array in the return value
   score(course: CourseData): ScoreResult {
     const rawScore = course.level * 20 + (course.instructor ? 0 : 10);
     return {
@@ -1748,7 +1734,6 @@ class UseCourseSimulator {
     return newDeps.some((dep, i) => dep !== this.effectDeps[i]);
   }
 
-  // BUG: Dependency array only includes client, not categoryFilter
   private getEffectDeps(): unknown[] {
     return [this.client]; // missing categoryFilter
   }
@@ -1819,7 +1804,6 @@ class UseCourseSimulator {
     return newDeps.some((dep, i) => dep !== this.effectDeps[i]);
   }
 
-  // FIXED: Include categoryFilter in the dependency array
   private getEffectDeps(): unknown[] {
     return [this.client, this.categoryFilter];
   }
@@ -1988,7 +1972,6 @@ class CertificationCourseCard extends CourseCardModel {
       { label: 'Level', value: this.levelDisplay() },
       { label: 'Exam Code', value: String(examCode) },
       { label: 'Instructor', value: this.course.instructor ?? 'Self-study' },
-      // BUG: Accesses non-existent passRate field -> undefined * 100 = NaN
       {
         label: 'Pass Rate',
         value: \`\${(this.course.metadata as Record<string, number>).passRate * 100}%\`,
@@ -2042,7 +2025,6 @@ class CertificationCourseCard extends CourseCardModel {
       { label: 'Level', value: this.levelDisplay() },
       { label: 'Exam Code', value: String(examCode) },
       { label: 'Instructor', value: this.course.instructor ?? 'Self-study' },
-      // FIXED: Add null check with fallback
       {
         label: 'Pass Rate',
         value: (this.course.metadata as any).passRate != null
@@ -2319,7 +2301,6 @@ function createTestCourse(overrides: Partial<CourseData> = {}): CourseData {
         filename: 'scoring.test.ts',
         language: 'typescript',
         code: `describe('PopularityStrategy level 1 scoring', () => {
-  // BUG: This test was written to match the buggy (level - 1) * 10 formula.
   // After fixing Bug 5, level 1 -> base 10, then level weight (1*2/5 = 0.4), total = 10*0.4 = 4
   // The test should expect 4, not 0.
   it('should produce correct score for level 1 (not 0)', () => {
@@ -2405,7 +2386,6 @@ function createTestCourse(overrides: Partial<CourseData> = {}): CourseData {
   };
 }
 
-// BUG: getHours() returns local timezone hour, not UTC hour
 function getCreatedHour(course: CourseData): number {
   const date = new Date(course.createdAt);
   return date.getHours(); // timezone-dependent!
@@ -2425,10 +2405,9 @@ function createTestCourse(overrides: Partial<CourseData> = {}): CourseData {
   };
 }
 
-// FIXED: Use getUTCHours() for timezone-independent result
 function getCreatedHour(course: CourseData): number {
   const date = new Date(course.createdAt);
-  return date.getUTCHours(); // FIXED: always returns UTC hour
+  return date.getUTCHours();
 }`,
       },
     ],

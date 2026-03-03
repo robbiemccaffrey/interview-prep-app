@@ -115,7 +115,6 @@ export function createWorkoutsHook(initialFilter: WorkoutFilter) {
 
   let currentFilter = initialFilter;
 
-  // BUG: dependency array only includes refreshKey, not filter
   const effect = createEffect(() => [getRefreshKey()]);
 
   function runEffect() {
@@ -224,7 +223,6 @@ export function createWorkoutsHook(initialFilter: WorkoutFilter) {
 
   let currentFilter = initialFilter;
 
-  // FIX: dependency array includes both refreshKey AND filter fields
   const effect = createEffect(() => [
     getRefreshKey(),
     currentFilter.search,
@@ -310,7 +308,6 @@ describe("useWorkouts - filter dependency", () => {
 The \`useEffect\` that fetches workouts has \`[refreshKey]\` as its only dependency. Even though the effect reads \`filter\` inside its body, \`filter\` is not in the dependency array. When the filter changes, the effect does **not** re-run, so the fetched data never updates.
 
 \`\`\`typescript
-// BUG: Only refreshKey triggers re-run
 const effect = createEffect(() => [getRefreshKey()]);
 \`\`\`
 
@@ -403,9 +400,8 @@ export function createAddSetForm(exerciseId: string) {
       completed: false,
     };
 
-    // BUG: After setSets, the local 'sets' variable still has the old value
     setSets([...sets, newSet]);
-    onSetsChange(sets); // Passes stale array!
+    onSetsChange(sets);
   }
 
   return { handleAddSet, getSets };
@@ -520,7 +516,7 @@ In \`handleAddSet\`, after calling \`setSets([...sets, newSet])\`, the local var
 
 \`\`\`typescript
 setSets([...sets, newSet]);  // Schedules update
-onSetsChange(sets);          // BUG: 'sets' is still the old array
+onSetsChange(sets);
 \`\`\`
 
 ### Fix
@@ -612,7 +608,6 @@ export function createTimer() {
         setSeconds(getSeconds() + 1);
       }, 1000);
 
-      // BUG: No cleanup function returned — interval leaks!
     });
   }
 
@@ -680,7 +675,6 @@ export function createTimer() {
         setSeconds(getSeconds() + 1);
       }, 1000);
 
-      // FIX: Return cleanup to clear the interval
       return () => clearInterval(id);
     });
   }
@@ -784,7 +778,6 @@ The \`useEffect\` creates a \`setInterval\` when \`isRunning\` becomes true, but
 timerEffect.run(() => {
   if (!getIsRunning()) return;
   const id = setInterval(() => { ... }, 1000);
-  // BUG: No cleanup! Old intervals keep running
 });
 \`\`\`
 
@@ -881,7 +874,6 @@ export function createLeaderboard(
   let currentOptions = options;
   let computeCount = 0;
 
-  // BUG: Using the whole options object as a dependency —
   // a new object reference each time means memo never caches
   const getSorted = createMemo(
     () => {
@@ -964,7 +956,6 @@ export function createLeaderboard(
   let currentOptions = options;
   let computeCount = 0;
 
-  // FIX: Use individual primitive values as dependencies
   const getSorted = createMemo(
     () => {
       computeCount++;
@@ -1064,7 +1055,6 @@ describe("useLeaderboard - memoization", () => {
 The \`useMemo\` dependency array contains \`options\` — the entire object. In React, the parent component creates a new \`{ sortBy, limit }\` object every render. Since \`Object.is(oldObj, newObj)\` is \`false\` for different object references (even with identical contents), the memo thinks dependencies have changed and recomputes.
 
 \`\`\`typescript
-// BUG: New object reference every time
 () => [currentEntries, currentOptions]
 \`\`\`
 
@@ -1176,7 +1166,6 @@ export function formatDate(date: Date): string {
 export function getWorkouts(filter?: WorkoutFilter): WorkoutData[] {
   const raw = simulateApiFetch(filter);
 
-  // BUG: TypeScript trusts the cast, but completedAt/createdAt are still strings!
   return raw as WorkoutData[];
 }
 
@@ -1248,7 +1237,6 @@ export function formatDate(date: Date): string {
 export function getWorkouts(filter?: WorkoutFilter): WorkoutData[] {
   const raw = simulateApiFetch(filter);
 
-  // FIX: Convert string dates to actual Date objects
   return (raw as any[]).map((w) => ({
     ...w,
     completedAt: new Date(w.completedAt),
@@ -1399,7 +1387,6 @@ export class WorkoutCardModel {
   }
 
   get unitSystem(): string | undefined {
-    // BUG: No fallback when optional chain returns undefined
     return this.user?.settings?.unitSystem;
   }
 
@@ -1457,7 +1444,6 @@ export class WorkoutCardModel {
   }
 
   get unitSystem(): string {
-    // FIX: Fallback to "metric" when optional chain returns undefined
     return this.user?.settings?.unitSystem ?? "metric";
   }
 
@@ -1594,7 +1580,7 @@ The \`ExerciseType\` enum is defined as a numeric enum (\`Strength = 0\`, \`Card
       {
         filename: 'ExerciseFilter.ts',
         language: 'typescript',
-        buggyCode: `// BUG: Numeric enum -- values are 0, 1, 2, 3, 4 at runtime
+        buggyCode: `
 enum ExerciseType {
   Strength = 0,
   Cardio = 1,
@@ -1627,7 +1613,6 @@ export function filterByType(
   if (!selectedType) return exercises;
 
   return exercises.filter((ex) => {
-    // BUG: Comparing string ("strength") to numeric enum value (0)
     switch (selectedType) {
       case "strength":
         return ex.type === ExerciseType.Strength;
@@ -1648,7 +1633,7 @@ export function filterByType(
 export function getAllExercises(): ExerciseData[] {
   return ALL_EXERCISES;
 }`,
-        solutionCode: `// FIX: String enum -- values match the API response strings
+        solutionCode: `
 enum ExerciseType {
   Strength = "strength",
   Cardio = "cardio",
@@ -1681,7 +1666,6 @@ export function filterByType(
   if (!selectedType) return exercises;
 
   return exercises.filter((ex) => {
-    // FIX: String enum values now match the API strings
     switch (selectedType) {
       case "strength":
         return ex.type === ExerciseType.Strength;
@@ -1834,7 +1818,6 @@ export function createExerciseList(exercises: ExerciseData[]) {
 
   function getRenderedItems(): RenderedItem[] {
     return items.map((exercise, index) => {
-      // BUG: Using index as key -- state is tied to position, not identity
       const key = index;
 
       if (!notes.has(key)) {
@@ -1894,7 +1877,6 @@ export function createExerciseList(exercises: ExerciseData[]) {
 
   function getRenderedItems(): RenderedItem[] {
     return items.map((exercise) => {
-      // FIX: Use exercise.id as key -- state follows the item
       const key = exercise.id;
 
       if (!notes.has(key)) {
@@ -2019,7 +2001,6 @@ describe("ExerciseList - key-based reconciliation", () => {
 The list uses \`index\` as the key for each rendered item. When items are reordered, the key at position 0 is still \`0\`, position 1 is still \`1\`, etc. React (and our simulation) matches items by key, so the **notes stay at their original index position** rather than following the exercise they belong to.
 
 \`\`\`typescript
-// BUG: key = index, so notes are tied to position
 const key = index;
 \`\`\`
 
@@ -2028,7 +2009,6 @@ const key = index;
 Use a stable unique identifier as the key:
 
 \`\`\`typescript
-// FIX: key = exercise.id, so notes follow the exercise
 const key = exercise.id;
 \`\`\``,
   },
@@ -2116,7 +2096,6 @@ export function createExerciseListWithMemo(exercises: ExerciseData[]) {
    * In React, this function body runs on every render.
    */
   function render() {
-    // BUG: This function is created fresh on every render -- new reference each time!
     const handleSelect = (id: string) => {
       const next = new Set(selectedIds);
       if (next.has(id)) next.delete(id);
@@ -2196,7 +2175,6 @@ export function createExerciseListWithMemo(exercises: ExerciseData[]) {
   let selectedIds = new Set<string>();
   let totalRenderCount = 0;
 
-  // FIX: Create handleSelect once (simulates useCallback with [] deps)
   // so the function reference is stable across renders
   const handleSelect = (id: string) => {
     const next = new Set(selectedIds);
@@ -2393,7 +2371,6 @@ export function createSearchBar(
     // Create a synthetic event (simulates what React passes)
     const e = createSyntheticEvent(inputValue);
 
-    // BUG: Reading e.target.value inside setTimeout --
     // by then, the synthetic event has been recycled and e.target is null
     timeoutId = setTimeout(() => {
       onSearch(e.target?.value ?? "");
@@ -2435,7 +2412,6 @@ export function createSearchBar(
     // Create a synthetic event (simulates what React passes)
     const e = createSyntheticEvent(inputValue);
 
-    // FIX: Capture the value synchronously before the event is recycled
     const value = e.target?.value ?? "";
 
     timeoutId = setTimeout(() => {
@@ -2530,7 +2506,7 @@ React recycles synthetic events after the event handler returns (event pooling).
 
 \`\`\`typescript
 timeoutId = setTimeout(() => {
-  onSearch(e.target?.value ?? ""); // BUG: e.target is null by now
+  onSearch(e.target?.value ?? "");
 }, debounceMs);
 \`\`\`
 
@@ -2588,7 +2564,7 @@ The function has a default parameter \`bodyWeight = 0\`. The formula multiplies 
 export function calculateCaloriesBurned(
   durationMinutes: number,
   caloriesPerMinute: number,
-  bodyWeight: number = 0 // BUG: Default should be 70, not 0
+  bodyWeight: number = 0
 ): number {
   return Math.round(durationMinutes * caloriesPerMinute * (bodyWeight / 70));
 }
@@ -2620,7 +2596,7 @@ export function estimateWorkoutCalories(
 export function calculateCaloriesBurned(
   durationMinutes: number,
   caloriesPerMinute: number,
-  bodyWeight: number = 70 // FIX: Default to 70 kg (average adult)
+  bodyWeight: number = 70
 ): number {
   return Math.round(durationMinutes * caloriesPerMinute * (bodyWeight / 70));
 }
@@ -2783,7 +2759,6 @@ export function createExerciseFilter() {
   let exercises: ExerciseData[] = [];
   let loading = false;
 
-  // BUG: No mechanism to cancel or ignore stale requests
   async function selectType(type: string, delayMs: number = 100) {
     loading = true;
 
@@ -2838,7 +2813,6 @@ function fetchExercisesByType(
 export function createExerciseFilter() {
   let exercises: ExerciseData[] = [];
   let loading = false;
-  // FIX: Track the latest request with a counter
   let requestId = 0;
 
   async function selectType(type: string, delayMs: number = 100) {
@@ -2848,7 +2822,6 @@ export function createExerciseFilter() {
 
     const data = await fetchExercisesByType(type, delayMs);
 
-    // FIX: Only update state if this is still the latest request
     if (thisRequestId === requestId) {
       exercises = data;
       loading = false;
