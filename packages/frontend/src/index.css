@@ -22,6 +22,16 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer components {
   .prose-dark {
     @apply prose prose-invert prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-700
