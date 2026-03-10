@@ -12,7 +12,7 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: robbiemccaffrey/codinginterviewguide
+  IMAGE_NAME: robbiemccaffrey/interview-prep-app
   AWS_REGION: eu-west-1
   DEPLOY_ROLE: arn:aws:iam::665474257257:role/github-deploy
 
@@ -49,7 +49,7 @@ jobs:
           COMMAND_ID=$(aws ssm send-command \
             --instance-ids "$INSTANCE_ID" \
             --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["cd /home/ubuntu/app && docker compose pull codinginterviewguide && docker compose up -d --no-deps codinginterviewguide && docker compose up -d nginx"]' \
+            --parameters 'commands=["cd /home/ubuntu/app && sed -i '"'"'s|ghcr.io/robbiemccaffrey/codinginterviewguide|ghcr.io/robbiemccaffrey/interview-prep-app|g'"'"' docker-compose.yml && docker compose pull codinginterviewguide && docker compose up -d --no-deps codinginterviewguide && docker compose up -d nginx"]' \
             --query "Command.CommandId" \
             --output text)
 
