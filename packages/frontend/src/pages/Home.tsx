@@ -3,6 +3,7 @@ import { useProgress } from '../hooks/useProgress';
 import { problems } from '../data/problems';
 import { debugExercises } from '../data/debugExercises';
 import { gotchas } from '../data/gotchas';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const { completedProblems } = useProgress();
@@ -10,6 +11,18 @@ export default function Home() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
+      <SEO
+        title="Coding Interview Guide — Free DSA Practice & Learning"
+        description="Free software engineering interview prep. Learn data structures & algorithms, practice 24 coding problems with a live Python runner, debug real-world bugs, and master Big O notation."
+        path="/"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: 'Coding Interview Guide',
+          url: 'https://codinginterviewguide.com',
+          description: 'Free software engineering interview prep with interactive coding problems, DSA learning, and debugging exercises.',
+        }}
+      />
       {/* Hero */}
       <div className="text-center mb-16">
         <div className="mb-8">

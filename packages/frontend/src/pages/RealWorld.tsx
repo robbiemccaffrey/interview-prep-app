@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { realWorldProblems } from '../data/problems';
 import { useProgress } from '../hooks/useProgress';
+import SEO from '../components/SEO';
 
 const DIFFICULTY_COLORS = {
   easy: 'text-emerald-400 bg-emerald-900/30 border-emerald-800',
@@ -24,6 +25,12 @@ export default function RealWorld() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
+      <SEO
+        title="Real-World Coding Problems"
+        description="Apply data structures and algorithms to realistic engineering problems. Build event pipelines, rate limiters, and workflow schedulers with a live Python runner."
+        path="/real-world"
+      />
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">

@@ -8,6 +8,7 @@ import { RunResult } from '../hooks/usePyodide';
 import CodeEditor from '../components/practice/CodeEditor';
 import TestRunner from '../components/practice/TestRunner';
 import TestResults from '../components/practice/TestResults';
+import SEO from '../components/SEO';
 import 'highlight.js/styles/github-dark.css';
 
 const DIFFICULTY_COLORS = {
@@ -64,6 +65,21 @@ export default function Problem() {
 
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col">
+      <SEO
+        title={`${problem.title} — ${problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}`}
+        description={`Solve "${problem.title}" — ${problem.difficulty === 'easy' ? 'an' : 'a'} ${problem.difficulty} ${problem.category} coding problem. Write Python code and run tests in your browser.`}
+        path={`/practice/${problem.id}`}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'LearningResource',
+          name: problem.title,
+          description: `${problem.difficulty === 'easy' ? 'An' : 'A'} ${problem.difficulty} ${problem.category} coding problem.`,
+          educationalLevel: problem.difficulty === 'easy' ? 'Beginner' : problem.difficulty === 'medium' ? 'Intermediate' : 'Advanced',
+          learningResourceType: 'Problem',
+          url: `https://codinginterviewguide.com/practice/${problem.id}`,
+        }}
+      />
+
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 bg-gray-950 shrink-0 min-w-0">
         <div className="flex items-center gap-2 md:gap-3 min-w-0">

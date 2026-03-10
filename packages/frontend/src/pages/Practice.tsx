@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { dsaProblems, dsaCategories } from '../data/problems';
 import { useProgress } from '../hooks/useProgress';
+import SEO from '../components/SEO';
 
 const DIFFICULTY_ORDER = { easy: 0, medium: 1, hard: 2 };
 
@@ -28,6 +29,12 @@ export default function Practice() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
+      <SEO
+        title="Practice Coding Problems"
+        description={`Practice ${dsaProblems.length} data structures and algorithms problems with a live Python code runner. Filter by difficulty and category. Track your progress.`}
+        path="/practice"
+      />
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Practice</h1>

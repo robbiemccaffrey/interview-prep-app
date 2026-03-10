@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { debugExercises, debugProjects, debugCategories, PROJECT_LABELS } from '../data/debugExercises';
 import { useProgress } from '../hooks/useProgress';
+import SEO from '../components/SEO';
 
 const DIFFICULTY_ORDER = { easy: 0, medium: 1, hard: 2 };
 
@@ -45,6 +46,12 @@ export default function Debug() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
+      <SEO
+        title="Debug Exercises — Find & Fix Bugs"
+        description={`${debugExercises.length} real-world debugging exercises in TypeScript and Python across 7 projects. Find the bug, fix it, and run tests in your browser.`}
+        path="/debug"
+      />
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">Debug</h1>

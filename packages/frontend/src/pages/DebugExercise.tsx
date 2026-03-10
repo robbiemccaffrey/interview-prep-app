@@ -8,6 +8,7 @@ import { RunResult } from '../hooks/usePyodide';
 import MultiFileEditor, { EditorFile } from '../components/debug/MultiFileEditor';
 import DebugTestRunner from '../components/debug/DebugTestRunner';
 import TestResults from '../components/practice/TestResults';
+import SEO from '../components/SEO';
 import 'highlight.js/styles/github-dark.css';
 
 const DIFFICULTY_COLORS = {
@@ -129,6 +130,12 @@ export default function DebugExercise() {
 
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col">
+      <SEO
+        title={`${exercise.title} — Debug`}
+        description={`Debug exercise: ${exercise.symptom} Find and fix the bug in this ${exercise.difficulty} ${exercise.language} exercise.`}
+        path={`/debug/${exercise.id}`}
+      />
+
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-800 bg-gray-950 shrink-0 min-w-0">
         <div className="flex items-center gap-2 md:gap-3 min-w-0">

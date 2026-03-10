@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import { gotchas } from '../data/gotchas';
+import SEO from '../components/SEO';
 import 'highlight.js/styles/github-dark.css';
 
 export default function GotchaTopic() {
@@ -26,6 +27,12 @@ export default function GotchaTopic() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
+      <SEO
+        title={topic.title}
+        description={topic.summary}
+        path={`/gotchas/${topic.id}`}
+      />
+
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500">
         <Link to="/gotchas" className="hover:text-rose-400 transition-colors">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
+import SEO from '../components/SEO';
 import 'highlight.js/styles/github-dark.css';
 
 interface Example {
@@ -382,6 +383,12 @@ export default function BigO() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
+      <SEO
+        title="Big O Notation Quiz & Reference"
+        description="Test your understanding of time and space complexity with 30 interactive code examples. Instant feedback with explanations and a Big O reference table."
+        path="/big-o"
+      />
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">

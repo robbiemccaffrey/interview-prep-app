@@ -2,6 +2,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import { topics } from '../data/topics';
+import SEO from '../components/SEO';
 import 'highlight.js/styles/github-dark.css';
 
 export default function LearnTopic() {
@@ -26,6 +27,21 @@ export default function LearnTopic() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
+      <SEO
+        title={`${topic.title} — Learn`}
+        description={topic.summary}
+        path={`/learn/${topic.id}`}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'LearningResource',
+          name: topic.title,
+          description: topic.summary,
+          educationalLevel: 'Intermediate',
+          learningResourceType: 'Tutorial',
+          url: `https://codinginterviewguide.com/learn/${topic.id}`,
+        }}
+      />
+
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500">
         <Link to="/learn" className="hover:text-emerald-400 transition-colors">

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
+  <url>
+    <loc>https://codinginterviewguide.com/</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- Learn section -->
+  <url>
+    <loc>https://codinginterviewguide.com/learn</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url><loc>https://codinginterviewguide.com/learn/big-o-notation</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/hash-tables</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/arrays-strings</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/linked-lists</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/stacks-queues</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/trees-bst</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/graphs</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/recursion-dp</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/sorting-searching</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/bit-manipulation</loc><priority>0.8</priority></url>
+  <url><loc>https://codinginterviewguide.com/learn/interview-patterns</loc><priority>0.8</priority></url>
+
+  <!-- Practice section -->
+  <url>
+    <loc>https://codinginterviewguide.com/practice</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url><loc>https://codinginterviewguide.com/practice/palindrome-permutation</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/string-compression</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/remove-dups</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/stack-min</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/triple-step</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/one-away</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/rotate-matrix</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/partition-list</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/sum-lists</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/sort-stack</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/bfs-path</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/balanced-bst</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/magic-index</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/coin-change</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/topological-sort</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/loop-detection</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/list-of-depths</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/validate-bst</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/first-common-ancestor</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/permutations</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/event-log-analyzer</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/rate-limiter</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/practice/agent-workflow</loc><priority>0.7</priority></url>
+
+  <!-- Real World -->
+  <url>
+    <loc>https://codinginterviewguide.com/real-world</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- Big O -->
+  <url>
+    <loc>https://codinginterviewguide.com/big-o</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <!-- Debug section -->
+  <url>
+    <loc>https://codinginterviewguide.com/debug</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <!-- Dispatch exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/dispatch-a</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/dispatch-b</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/dispatch-c</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/dispatch-d</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/dispatch-e</loc><priority>0.6</priority></url>
+  <!-- Support Agent exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/support-agent-a</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/support-agent-b</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/support-agent-c</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/support-agent-d</loc><priority>0.6</priority></url>
+  <!-- Course Catalog exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-1</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-2</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-3</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-4</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-5</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-6</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-7</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-8</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-9</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-10</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-11</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/course-catalog-12</loc><priority>0.6</priority></url>
+  <!-- Expense Tracker exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-1</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-2</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-3</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-4</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-5</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-6</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-7</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-8</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-9</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-10</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-11</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/expense-tracker-12</loc><priority>0.6</priority></url>
+  <!-- React Fitness exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-1</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-2</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-3</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-4</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-5</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-6</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-7</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-8</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-9</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-10</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-11</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/react-fitness-12</loc><priority>0.6</priority></url>
+  <!-- Issue Triage exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-1</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-2</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-3</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-4</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-5</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-6</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-7</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-8</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-9</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-10</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-11</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/issue-triage-12</loc><priority>0.6</priority></url>
+  <!-- Music Streamer exercises -->
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-1</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-2</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-3</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-4</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-5</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-6</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-7</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-8</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-9</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-10</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-11</loc><priority>0.6</priority></url>
+  <url><loc>https://codinginterviewguide.com/debug/music-streamer-12</loc><priority>0.6</priority></url>
+
+  <!-- Gotchas section -->
+  <url>
+    <loc>https://codinginterviewguide.com/gotchas</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url><loc>https://codinginterviewguide.com/gotchas/python</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/gotchas/typescript</loc><priority>0.7</priority></url>
+  <url><loc>https://codinginterviewguide.com/gotchas/react</loc><priority>0.7</priority></url>
+</urlset>
