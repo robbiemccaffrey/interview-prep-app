@@ -144,10 +144,11 @@ async function prerender() {
 
         const html = await page.content();
 
-        // Write the prerendered HTML
+        // Write as flat .html files so serve's cleanUrls resolves them
+        // e.g. /learn/hash-tables → dist/learn/hash-tables.html
         const outputPath = route === '/'
           ? join(DIST_DIR, 'index.html')
-          : join(DIST_DIR, route, 'index.html');
+          : join(DIST_DIR, `${route}.html`);
 
         const outputDir = dirname(outputPath);
         if (!existsSync(outputDir)) {

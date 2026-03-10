@@ -20,5 +20,4 @@ RUN npm install -g serve@14
 WORKDIR /app
 COPY --from=builder /app/packages/frontend/dist ./dist
 EXPOSE 4010
-COPY --from=builder /app/packages/frontend/dist/serve.json ./serve.json
 CMD ["serve", "dist", "-l", "4010", "-s"]
