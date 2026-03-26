@@ -5,9 +5,10 @@ interface Props {
   value: string;
   onChange: (val: string) => void;
   onEditorMount?: (getCode: () => string) => void;
+  language?: 'python' | 'typescript';
 }
 
-export default function CodeEditor({ value, onChange, onEditorMount }: Props) {
+export default function CodeEditor({ value, onChange, onEditorMount, language = 'python' }: Props) {
   const editorRef = useRef<unknown>(null);
 
   const handleMount: OnMount = (editor) => {
@@ -22,7 +23,7 @@ export default function CodeEditor({ value, onChange, onEditorMount }: Props) {
     <div className="h-full w-full overflow-hidden rounded-lg">
       <Editor
         height="100%"
-        defaultLanguage="python"
+        language={language}
         value={value}
         onChange={(val) => onChange(val ?? '')}
         onMount={handleMount}
@@ -35,7 +36,7 @@ export default function CodeEditor({ value, onChange, onEditorMount }: Props) {
           scrollBeyondLastLine: false,
           lineNumbers: 'on',
           renderLineHighlight: 'line',
-          tabSize: 4,
+          tabSize: language === 'typescript' ? 2 : 4,
           insertSpaces: true,
           wordWrap: 'on',
           automaticLayout: true,

@@ -1,25 +1,40 @@
 import { useState, useCallback } from 'react';
 import { usePyodide, RunResult } from '../../hooks/usePyodide';
+import { useTypeScript } from '../../hooks/useTypeScript';
 
 interface Props {
   getCode: () => string;
   testCode: string;
   onResult: (result: RunResult) => void;
   onAllPassed: () => void;
+  language?: 'python' | 'typescript';
 }
 
-export default function TestRunner({ getCode, testCode, onResult, onAllPassed }: Props) {
-  const { status, runCode } = usePyodide();
+export default function TestRunner({ getCode, testCode, onResult, onAllPassed, language = 'python' }: Props) {
+  const py = usePyodide();
+  const ts = useTypeScript();
   const [isRunning, setIsRunning] = useState(false);
 
+  const runtime = language === 'typescript' ? ts : py;
+
   const handleRun = useCallback(async () => {
-    if (status !== 'ready' || isRunning) return;
+    if (runtime.status !== 'ready' || isRunning) return;
 
     setIsRunning(true);
-    const userCode = getCode();
-    const combined = userCode + '\n\n' + testCode;
 
-    const result = await runCode(combined);
+    let result: RunResult;
+    if (language === 'typescript') {
+      const userCode = getCode();
+      result = await ts.runCode({
+        'solution.ts': userCode,
+        'solution.test.ts': testCode,
+      });
+    } else {
+      const userCode = getCode();
+      const combined = userCode + '\n\n' + testCode;
+      result = await py.runCode(combined);
+    }
+
     onResult(result);
 
     // Check if all tests passed
@@ -33,15 +48,17 @@ export default function TestRunner({ getCode, testCode, onResult, onAllPassed }:
     }
 
     setIsRunning(false);
-  }, [status, isRunning, getCode, testCode, runCode, onResult, onAllPassed]);
+  }, [runtime.status, isRunning, getCode, testCode, language, ts, py, onResult, onAllPassed]);
+
+  const runtimeLabel = language === 'typescript' ? 'TypeScript' : 'Python';
 
   return (
     <div className="flex items-center gap-2">
       <button
         onClick={handleRun}
-        disabled={status !== 'ready' || isRunning}
+        disabled={runtime.status !== 'ready' || isRunning}
         className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-          status === 'ready' && !isRunning
+          runtime.status === 'ready' && !isRunning
             ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
             : 'bg-gray-700 text-gray-400 cursor-not-allowed'
         }`}
@@ -59,14 +76,14 @@ export default function TestRunner({ getCode, testCode, onResult, onAllPassed }:
         )}
       </button>
 
-      {status === 'loading' && (
-        <span className="text-xs text-gray-500 animate-pulse">Loading Python runtime...</span>
+      {runtime.status === 'loading' && (
+        <span className="text-xs text-gray-500 animate-pulse">Loading {runtimeLabel} runtime...</span>
       )}
-      {status === 'error' && (
-        <span className="text-xs text-red-400">Failed to load Python runtime</span>
+      {runtime.status === 'error' && (
+        <span className="text-xs text-red-400">Failed to load {runtimeLabel} runtime</span>
       )}
-      {status === 'ready' && (
-        <span className="text-xs text-gray-600">Python ready</span>
+      {runtime.status === 'ready' && (
+        <span className="text-xs text-gray-600">{runtimeLabel} ready</span>
       )}
     </div>
   );

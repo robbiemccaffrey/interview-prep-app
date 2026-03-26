@@ -7,6 +7,9 @@ export interface Problem {
   starterCode: string;
   testCode: string;
   solution: string;
+  starterCodeTs?: string;
+  testCodeTs?: string;
+  solutionTs?: string;
   hints: string[];
 }
 
@@ -79,6 +82,51 @@ run_tests()
 
     odd_count = sum(1 for count in freq.values() if count % 2 != 0)
     return odd_count <= 1
+`,
+    starterCodeTs: `export function isPalindromePermutation(s: string): boolean {
+  // Check if s is a permutation of a palindrome.
+  // A string can form a palindrome if at most one character
+  // has an odd frequency count.
+  // Ignore spaces and case.
+
+  // TODO: implement
+  return false;
+}
+`,
+    testCodeTs: `const { isPalindromePermutation } = require('./solution');
+
+describe('isPalindromePermutation', () => {
+  const cases: [string, boolean][] = [
+    ["Tact Coa", true],
+    ["racecar", true],
+    ["aabbccdd", true],
+    ["aabbccd", true],
+    ["abc", false],
+    ["aabbccdde", true],
+    ["", true],
+    ["a", true],
+    ["ab", false],
+  ];
+
+  cases.forEach(([input, expected]) => {
+    it(\`isPalindromePermutation("\${input}") should be \${expected}\`, () => {
+      expect(isPalindromePermutation(input)).toBe(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function isPalindromePermutation(s: string): boolean {
+  const freq: Record<string, number> = {};
+  for (const ch of s.toLowerCase()) {
+    if (ch === ' ') continue;
+    freq[ch] = (freq[ch] || 0) + 1;
+  }
+  let oddCount = 0;
+  for (const count of Object.values(freq)) {
+    if (count % 2 !== 0) oddCount++;
+  }
+  return oddCount <= 1;
+}
 `,
     hints: [
       'A palindrome reads the same forward and backward.',
@@ -158,6 +206,51 @@ run_tests()
     compressed = "".join(parts)
     return compressed if len(compressed) < len(s) else s
 `,
+    starterCodeTs: `export function compressString(s: string): string {
+  // Compress s by encoding consecutive repeats as charCount.
+  // Return original if compressed version is not shorter.
+
+  // TODO: implement
+  return s;
+}
+`,
+    testCodeTs: `const { compressString } = require('./solution');
+
+describe('compressString', () => {
+  const cases: [string, string][] = [
+    ["aabcccccaaa", "a2b1c5a3"],
+    ["abcd", "abcd"],
+    ["aabb", "aabb"],
+    ["a", "a"],
+    ["aaa", "a3"],
+    ["abcdef", "abcdef"],
+    ["aaabbbccc", "a3b3c3"],
+  ];
+
+  cases.forEach(([input, expected]) => {
+    it(\`compressString("\${input}") should be "\${expected}"\`, () => {
+      expect(compressString(input)).toBe(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function compressString(s: string): string {
+  if (s.length === 0) return s;
+  const parts: string[] = [];
+  let count = 1;
+  for (let i = 1; i < s.length; i++) {
+    if (s[i] === s[i - 1]) {
+      count++;
+    } else {
+      parts.push(s[i - 1] + String(count));
+      count = 1;
+    }
+  }
+  parts.push(s[s.length - 1] + String(count));
+  const compressed = parts.join('');
+  return compressed.length < s.length ? compressed : s;
+}
+`,
     hints: [
       'Iterate through the string tracking the current character and its count.',
       'When the character changes, append "char + count" to your result.',
@@ -224,6 +317,47 @@ run_tests()
             seen.add(v)
             result.append(v)
     return result
+`,
+    starterCodeTs: `export function removeDups(values: number[]): number[] {
+  // Remove duplicates from the array while preserving order.
+  // First occurrence of each value is kept.
+  // Example: [1, 2, 3, 2, 1] -> [1, 2, 3]
+
+  // TODO: implement
+  return [];
+}
+`,
+    testCodeTs: `const { removeDups } = require('./solution');
+
+describe('removeDups', () => {
+  const cases: [number[], number[]][] = [
+    [[1, 2, 3, 2, 1], [1, 2, 3]],
+    [[1, 1, 1, 1], [1]],
+    [[], []],
+    [[1], [1]],
+    [[1, 2, 3], [1, 2, 3]],
+    [[3, 1, 2, 1, 3, 2], [3, 1, 2]],
+    [[1, 2, 3, 4, 5, 1, 2], [1, 2, 3, 4, 5]],
+  ];
+
+  cases.forEach(([input, expected]) => {
+    it(\`removeDups(\${JSON.stringify(input)}) should be \${JSON.stringify(expected)}\`, () => {
+      expect(removeDups([...input])).toEqual(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function removeDups(values: number[]): number[] {
+  const seen = new Set<number>();
+  const result: number[] = [];
+  for (const v of values) {
+    if (!seen.has(v)) {
+      seen.add(v);
+      result.push(v);
+    }
+  }
+  return result;
+}
 `,
     hints: [
       'Use a set to track values you have already seen.',
@@ -341,6 +475,111 @@ run_tests()
     def is_empty(self) -> bool:
         return len(self.stack) == 0
 `,
+    starterCodeTs: `export class MinStack {
+  // TODO: add private fields
+
+  constructor() {
+    // TODO: initialize
+  }
+
+  push(val: number): void {
+    // TODO: implement
+  }
+
+  pop(): number {
+    // TODO: implement
+    return 0;
+  }
+
+  peek(): number {
+    // TODO: implement
+    return 0;
+  }
+
+  min(): number {
+    // Return the current minimum in O(1)
+    // TODO: implement
+    return 0;
+  }
+
+  isEmpty(): boolean {
+    // TODO: implement
+    return true;
+  }
+}
+`,
+    testCodeTs: `const { MinStack } = require('./solution');
+
+describe('MinStack', () => {
+  it('should track min after pushing 5, 3, 7, 1', () => {
+    const s = new MinStack();
+    s.push(5); s.push(3); s.push(7); s.push(1);
+    expect(s.min()).toBe(1);
+  });
+
+  it('should update min after popping 1', () => {
+    const s = new MinStack();
+    s.push(5); s.push(3); s.push(7); s.push(1);
+    s.pop();
+    expect(s.min()).toBe(3);
+  });
+
+  it('should update min after popping 7', () => {
+    const s = new MinStack();
+    s.push(5); s.push(3); s.push(7); s.push(1);
+    s.pop(); s.pop();
+    expect(s.min()).toBe(3);
+  });
+
+  it('should update min after popping 3', () => {
+    const s = new MinStack();
+    s.push(5); s.push(3); s.push(7); s.push(1);
+    s.pop(); s.pop(); s.pop();
+    expect(s.min()).toBe(5);
+  });
+
+  it('should handle all equal values', () => {
+    const s = new MinStack();
+    s.push(2); s.push(2); s.push(2);
+    expect(s.min()).toBe(2);
+  });
+
+  it('should handle equal values after pop', () => {
+    const s = new MinStack();
+    s.push(2); s.push(2); s.push(2);
+    s.pop();
+    expect(s.min()).toBe(2);
+  });
+});
+`,
+    solutionTs: `export class MinStack {
+  private stack: number[] = [];
+  private minStack: number[] = [];
+
+  push(val: number): void {
+    this.stack.push(val);
+    const currentMin = this.minStack.length === 0 ? val : Math.min(val, this.minStack[this.minStack.length - 1]);
+    this.minStack.push(currentMin);
+  }
+
+  pop(): number {
+    this.minStack.pop();
+    return this.stack.pop()!;
+  }
+
+  peek(): number {
+    return this.stack[this.stack.length - 1];
+  }
+
+  min(): number {
+    return this.minStack[this.minStack.length - 1];
+  }
+
+  isEmpty(): boolean {
+    return this.stack.length === 0;
+  }
+}
+`,
     hints: [
       'Maintain a second stack that tracks the minimum at each level.',
       'When you push, push the new minimum onto the min stack too.',
@@ -410,6 +649,39 @@ run_tests()
         return memo[k]
 
     return dp(n)
+`,
+    starterCodeTs: `export function countWays(n: number): number {
+  // Count the number of ways to climb n stairs,
+  // taking 1, 2, or 3 steps at a time.
+
+  // TODO: implement
+  return 0;
+}
+`,
+    testCodeTs: `const { countWays } = require('./solution');
+
+describe('countWays', () => {
+  const cases: [number, number][] = [
+    [0, 1], [1, 1], [2, 2], [3, 4], [4, 7], [5, 13], [6, 24], [10, 274],
+  ];
+
+  cases.forEach(([n, expected]) => {
+    it(\`countWays(\${n}) should be \${expected}\`, () => {
+      expect(countWays(n)).toBe(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function countWays(n: number): number {
+  if (n < 0) return 0;
+  const memo: Record<number, number> = { 0: 1, 1: 1, 2: 2 };
+  function dp(k: number): number {
+    if (memo[k] !== undefined) return memo[k];
+    memo[k] = dp(k - 1) + dp(k - 2) + dp(k - 3);
+    return memo[k];
+  }
+  return dp(n);
+}
 `,
     hints: [
       'Think recursively: count_ways(n) = count_ways(n-1) + count_ways(n-2) + count_ways(n-3)',
@@ -505,6 +777,53 @@ run_tests()
             j += 1
     return True
 `,
+    starterCodeTs: `export function oneAway(s1: string, s2: string): boolean {
+  // Return true if s1 and s2 are at most one edit apart.
+  // An edit is: insert, remove, or replace one character.
+
+  // TODO: implement
+  return false;
+}
+`,
+    testCodeTs: `const { oneAway } = require('./solution');
+
+describe('oneAway', () => {
+  const cases: [string, string, boolean][] = [
+    ["pale", "ple", true], ["pales", "pale", true], ["pale", "bale", true],
+    ["pale", "bake", false], ["", "", true], ["a", "", true], ["", "a", true],
+    ["abc", "abc", true], ["abc", "abcd", true], ["abc", "ab", true],
+    ["abc", "xyz", false], ["a", "ab", true],
+  ];
+
+  cases.forEach(([s1, s2, expected]) => {
+    it(\`oneAway("\${s1}", "\${s2}") should be \${expected}\`, () => {
+      expect(oneAway(s1, s2)).toBe(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function oneAway(s1: string, s2: string): boolean {
+  if (Math.abs(s1.length - s2.length) > 1) return false;
+  if (s1.length === s2.length) {
+    let diff = 0;
+    for (let i = 0; i < s1.length; i++) {
+      if (s1[i] !== s2[i]) diff++;
+    }
+    return diff <= 1;
+  }
+  let short = s1.length < s2.length ? s1 : s2;
+  let long = s1.length < s2.length ? s2 : s1;
+  let i = 0, j = 0, diff = 0;
+  while (i < short.length && j < long.length) {
+    if (short[i] !== long[j]) {
+      diff++;
+      if (diff > 1) return false;
+      j++;
+    } else { i++; j++; }
+  }
+  return true;
+}
+`,
     hints: [
       'Split into two cases: same length (replacement only) vs length differs by 1 (insert/remove).',
       'If lengths differ by more than 1, return False immediately.',
@@ -580,6 +899,45 @@ run_tests()
     for row in matrix:
         row.reverse()
     return matrix
+`,
+    starterCodeTs: `export function rotate90CW(matrix: number[][]): number[][] {
+  // Rotate an NxN matrix 90 degrees clockwise in place.
+  // Returns the rotated matrix.
+  // Approach: transpose then reverse each row.
+
+  // TODO: implement
+  return matrix;
+}
+`,
+    testCodeTs: `const { rotate90CW } = require('./solution');
+
+describe('rotate90CW', () => {
+  it('should rotate 1x1 matrix', () => {
+    expect(rotate90CW([[1]])).toEqual([[1]]);
+  });
+  it('should rotate 2x2 matrix', () => {
+    expect(rotate90CW([[1,2],[3,4]])).toEqual([[3,1],[4,2]]);
+  });
+  it('should rotate 3x3 matrix', () => {
+    expect(rotate90CW([[1,2,3],[4,5,6],[7,8,9]])).toEqual([[7,4,1],[8,5,2],[9,6,3]]);
+  });
+  it('should rotate 4x4 matrix', () => {
+    expect(rotate90CW([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])).toEqual([[13,9,5,1],[14,10,6,2],[15,11,7,3],[16,12,8,4]]);
+  });
+});
+`,
+    solutionTs: `export function rotate90CW(matrix: number[][]): number[][] {
+  const n = matrix.length;
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const temp = matrix[i][j];
+      matrix[i][j] = matrix[j][i];
+      matrix[j][i] = temp;
+    }
+  }
+  for (const row of matrix) row.reverse();
+  return matrix;
+}
 `,
     hints: [
       'A 90° clockwise rotation can be broken into two steps.',
@@ -660,6 +1018,50 @@ run_tests()
             greater_equal.append(v)
     return less + greater_equal
 `,
+    starterCodeTs: `export function partition(values: number[], x: number): number[] {
+  // Partition values around x so all elements < x come first.
+  // Relative order within each partition need not be preserved.
+
+  // TODO: implement
+  return [];
+}
+`,
+    testCodeTs: `const { partition } = require('./solution');
+
+describe('partition', () => {
+  function isValidPartition(result: number[], x: number): boolean {
+    let foundGe = false;
+    for (const v of result) {
+      if (v >= x) foundGe = true;
+      else if (foundGe) return false;
+    }
+    return true;
+  }
+
+  const cases: [number[], number][] = [
+    [[3, 5, 8, 5, 10, 2, 1], 5], [[1, 2, 3, 4, 5], 3],
+    [[5, 4, 3, 2, 1], 3], [[1], 5], [[], 5], [[3, 3, 3], 3],
+  ];
+
+  cases.forEach(([values, x]) => {
+    it(\`partition(\${JSON.stringify(values)}, \${x}) should be valid\`, () => {
+      const result = partition([...values], x);
+      expect([...result].sort((a,b) => a-b)).toEqual([...values].sort((a,b) => a-b));
+      expect(isValidPartition(result, x)).toBe(true);
+    });
+  });
+});
+`,
+    solutionTs: `export function partition(values: number[], x: number): number[] {
+  const less: number[] = [];
+  const greaterEqual: number[] = [];
+  for (const v of values) {
+    if (v < x) less.push(v);
+    else greaterEqual.push(v);
+  }
+  return [...less, ...greaterEqual];
+}
+`,
     hints: [
       'Two-list approach: collect elements < x in one list, >= x in another.',
       'Concatenate at the end.',
@@ -729,6 +1131,48 @@ run_tests()
         if j < len(b): j += 1
     return result
 `,
+    starterCodeTs: `export function sumLists(a: number[], b: number[]): number[] {
+  // Add two numbers represented as reversed digit arrays.
+  // [7, 1, 6] represents 617
+  // [5, 9, 2] represents 295
+  // Result [2, 1, 9] represents 912
+
+  // TODO: implement
+  return [];
+}
+`,
+    testCodeTs: `const { sumLists } = require('./solution');
+
+describe('sumLists', () => {
+  const cases: [number[], number[], number[]][] = [
+    [[7,1,6], [5,9,2], [2,1,9]], [[0], [0], [0]],
+    [[9,9], [1], [0,0,1]], [[1], [9,9], [0,0,1]],
+    [[5], [5], [0,1]], [[1,2,3], [4,5,6], [5,7,9]],
+  ];
+
+  cases.forEach(([a, b, expected]) => {
+    it(\`sumLists(\${JSON.stringify(a)}, \${JSON.stringify(b)}) should be \${JSON.stringify(expected)}\`, () => {
+      expect(sumLists([...a], [...b])).toEqual(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function sumLists(a: number[], b: number[]): number[] {
+  const result: number[] = [];
+  let carry = 0;
+  let i = 0, j = 0;
+  while (i < a.length || j < b.length || carry > 0) {
+    const digitA = i < a.length ? a[i] : 0;
+    const digitB = j < b.length ? b[j] : 0;
+    const total = digitA + digitB + carry;
+    result.push(total % 10);
+    carry = Math.floor(total / 10);
+    if (i < a.length) i++;
+    if (j < b.length) j++;
+  }
+  return result;
+}
+`,
     hints: [
       'Iterate through both lists simultaneously, adding digit by digit.',
       'Track a carry variable — if sum >= 10, carry 1 to the next position.',
@@ -796,6 +1240,42 @@ run_tests()
             stack.append(temp.pop())
         temp.append(val)
     return temp  # temp has largest at bottom, smallest at top
+`,
+    starterCodeTs: `export function sortStack(stack: number[]): number[] {
+  // Sort the stack (array) so smallest element is at the top (end of array).
+  // Only use one extra stack (array). No other data structures.
+  // stack[stack.length - 1] is the top.
+
+  // TODO: implement
+  return [];
+}
+`,
+    testCodeTs: `const { sortStack } = require('./solution');
+
+describe('sortStack', () => {
+  const cases: [number[], number[]][] = [
+    [[5,8,9,3,1], [9,8,5,3,1]], [[1], [1]], [[], []],
+    [[2,1], [2,1]], [[1,2,3,4,5], [5,4,3,2,1]], [[5,4,3,2,1], [5,4,3,2,1]],
+  ];
+
+  cases.forEach(([input, expected]) => {
+    it(\`sortStack(\${JSON.stringify(input)}) should be \${JSON.stringify(expected)}\`, () => {
+      expect(sortStack([...input])).toEqual(expected);
+    });
+  });
+});
+`,
+    solutionTs: `export function sortStack(stack: number[]): number[] {
+  const temp: number[] = [];
+  while (stack.length > 0) {
+    const val = stack.pop()!;
+    while (temp.length > 0 && temp[temp.length - 1] < val) {
+      stack.push(temp.pop()!);
+    }
+    temp.push(val);
+  }
+  return temp;
+}
 `,
     hints: [
       'Use a temporary stack to build the sorted order.',
@@ -887,6 +1367,52 @@ def has_path(graph: dict, start: str, end: str) -> bool:
                 q.append(neighbour)
     return False
 `,
+    starterCodeTs: `export function hasPath(graph: Record<string, string[]>, start: string, end: string): boolean {
+  // Return true if there is a directed path from start to end in graph.
+  // graph = { A: ['B', 'C'], B: ['D'], ... }
+
+  // TODO: implement
+  return false;
+}
+`,
+    testCodeTs: `const { hasPath } = require('./solution');
+
+describe('hasPath', () => {
+  const g: Record<string, string[]> = { A: ['E'], B: ['C'], C: [], D: ['E'], E: [] };
+
+  it('A -> E should be true', () => { expect(hasPath(g, 'A', 'E')).toBe(true); });
+  it('A -> D should be false', () => { expect(hasPath(g, 'A', 'D')).toBe(false); });
+  it('B -> C should be true', () => { expect(hasPath(g, 'B', 'C')).toBe(true); });
+  it('C -> B should be false', () => { expect(hasPath(g, 'C', 'B')).toBe(false); });
+  it('A -> A should be true', () => { expect(hasPath(g, 'A', 'A')).toBe(true); });
+  it('D -> E should be true', () => { expect(hasPath(g, 'D', 'E')).toBe(true); });
+  it('E -> A should be false', () => { expect(hasPath(g, 'E', 'A')).toBe(false); });
+
+  describe('cycle graph', () => {
+    const gCycle: Record<string, string[]> = { X: ['Y'], Y: ['Z'], Z: ['X'] };
+    it('X -> Z should be true', () => { expect(hasPath(gCycle, 'X', 'Z')).toBe(true); });
+    it('X -> W should be false', () => { expect(hasPath(gCycle, 'X', 'W')).toBe(false); });
+  });
+});
+`,
+    solutionTs: `export function hasPath(graph: Record<string, string[]>, start: string, end: string): boolean {
+  if (start === end) return true;
+  const visited = new Set<string>();
+  const queue: string[] = [start];
+  visited.add(start);
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    if (node === end) return true;
+    for (const neighbour of (graph[node] || [])) {
+      if (!visited.has(neighbour)) {
+        visited.add(neighbour);
+        queue.push(neighbour);
+      }
+    }
+  }
+  return false;
+}
+`,
     hints: [
       'Use BFS (breadth-first search) with a visited set to avoid cycles.',
       'Start with the source node in a queue.',
@@ -977,6 +1503,45 @@ run_tests()
         return 0
     return height(0, len(arr) - 1)
 `,
+    starterCodeTs: `export function minHeightBST(arr: number[]): number {
+  // Build a minimal-height BST from a sorted array.
+  // Return the height of the resulting BST.
+  // Height of empty tree = 0, height of single node = 1.
+
+  // TODO: implement
+  return 0;
+}
+`,
+    testCodeTs: `const { minHeightBST } = require('./solution');
+
+describe('minHeightBST', () => {
+  const cases: [number[], number][] = [
+    [[], 0], [[1], 1], [[1,2], 2], [[1,2,3], 2], [[1,2,3,4,5,6,7], 3],
+  ];
+
+  cases.forEach(([arr, expected]) => {
+    it(\`minHeightBST(\${JSON.stringify(arr)}) should be \${expected}\`, () => {
+      expect(minHeightBST([...arr])).toBe(expected);
+    });
+  });
+
+  it('minHeightBST([1..15]) should be 4', () => {
+    const arr: number[] = [];
+    for (let i = 1; i <= 15; i++) arr.push(i);
+    expect(minHeightBST(arr)).toBe(4);
+  });
+});
+`,
+    solutionTs: `export function minHeightBST(arr: number[]): number {
+  function height(lo: number, hi: number): number {
+    if (lo > hi) return 0;
+    const mid = Math.floor((lo + hi) / 2);
+    return 1 + Math.max(height(lo, mid - 1), height(mid + 1, hi));
+  }
+  if (arr.length === 0) return 0;
+  return height(0, arr.length - 1);
+}
+`,
     hints: [
       'To minimize height, always pick the middle element as the root.',
       'Recursively do the same for the left and right halves.',
@@ -1056,6 +1621,82 @@ run_tests()
 
     return search(0, len(arr) - 1)
 `,
+    starterCodeTs: `export function magicIndex(arr: number[]): number | null {
+  /**
+   * Find index i such that arr[i] === i, or return null.
+   * Assume sorted array with distinct integers.
+   * Use binary search: O(log n).
+   */
+  // Your code here
+  return null;
+}
+`,
+    testCodeTs: `const { magicIndex } = require('./solution');
+
+describe('magicIndex', () => {
+  it('returns null for empty array', () => {
+    expect(magicIndex([])).toBeNull();
+  });
+
+  it('returns 0 for [0]', () => {
+    expect(magicIndex([0])).toBe(0);
+  });
+
+  it('returns null for [1]', () => {
+    expect(magicIndex([1])).toBeNull();
+  });
+
+  it('returns a valid magic index for [0,1,2,3,4]', () => {
+    const arr = [0, 1, 2, 3, 4];
+    const result = magicIndex([...arr]);
+    expect(result).not.toBeNull();
+    expect(arr[result as number]).toBe(result);
+  });
+
+  it('returns 0 for [0,4,5,6,7]', () => {
+    const arr = [0, 4, 5, 6, 7];
+    const result = magicIndex([...arr]);
+    expect(result).not.toBeNull();
+    expect(arr[result as number]).toBe(result);
+  });
+
+  it('returns 3 for [-10,-5,0,3,7]', () => {
+    const arr = [-10, -5, 0, 3, 7];
+    const result = magicIndex([...arr]);
+    expect(result).not.toBeNull();
+    expect(arr[result as number]).toBe(result);
+  });
+
+  it('returns a valid magic index for [-10,-9,-2,-1,4,5,7]', () => {
+    const arr = [-10, -9, -2, -1, 4, 5, 7];
+    const result = magicIndex([...arr]);
+    expect(result).not.toBeNull();
+    expect(arr[result as number]).toBe(result);
+  });
+
+  it('returns 4 for [-10,-9,-2,-1,4]', () => {
+    const arr = [-10, -9, -2, -1, 4];
+    const result = magicIndex([...arr]);
+    expect(result).not.toBeNull();
+    expect(arr[result as number]).toBe(result);
+  });
+
+  it('returns null for [-10,-9,-2,-3,4,5,7]', () => {
+    expect(magicIndex([-10, -9, -2, -3, 4, 5, 7])).toBeNull();
+  });
+});
+`,
+    solutionTs: `export function magicIndex(arr: number[]): number | null {
+  function search(lo: number, hi: number): number | null {
+    if (lo > hi) return null;
+    const mid = Math.floor((lo + hi) / 2);
+    if (arr[mid] === mid) return mid;
+    if (arr[mid] < mid) return search(mid + 1, hi);
+    return search(lo, mid - 1);
+  }
+  return search(0, arr.length - 1);
+}
+`,
     hints: [
       'This screams binary search — the array is sorted.',
       'If arr[mid] == mid, found it.',
@@ -1118,6 +1759,59 @@ run_tests()
         for amount in range(coin, n + 1):
             dp[amount] += dp[amount - coin]
     return dp[n]
+`,
+    starterCodeTs: `export function represent(n: number): number {
+  /**
+   * Count the number of ways to make n cents using
+   * quarters (25), dimes (10), nickels (5), and pennies (1).
+   */
+  // Your code here
+  return 0;
+}
+`,
+    testCodeTs: `const { represent } = require('./solution');
+
+describe('represent', () => {
+  it('returns 1 for 0 cents', () => {
+    expect(represent(0)).toBe(1);
+  });
+
+  it('returns 1 for 1 cent', () => {
+    expect(represent(1)).toBe(1);
+  });
+
+  it('returns 2 for 5 cents', () => {
+    expect(represent(5)).toBe(2);
+  });
+
+  it('returns 4 for 10 cents', () => {
+    expect(represent(10)).toBe(4);
+  });
+
+  it('returns 6 for 15 cents', () => {
+    expect(represent(15)).toBe(6);
+  });
+
+  it('returns 13 for 25 cents', () => {
+    expect(represent(25)).toBe(13);
+  });
+
+  it('returns 242 for 100 cents', () => {
+    expect(represent(100)).toBe(242);
+  });
+});
+`,
+    solutionTs: `export function represent(n: number): number {
+  const coins = [25, 10, 5, 1];
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = 1;
+  for (const coin of coins) {
+    for (let amount = coin; amount <= n; amount++) {
+      dp[amount] += dp[amount - coin];
+    }
+  }
+  return dp[n];
+}
 `,
     hints: [
       'Classic unbounded knapsack / change-making DP.',
@@ -1217,6 +1911,96 @@ def build_order(projects: list, dependencies: list):
 
     return order if len(order) == len(projects) else None
 `,
+    starterCodeTs: `export function buildOrder(
+  projects: string[],
+  dependencies: [string, string][]
+): string[] | null {
+  /**
+   * Return a valid build order (list), or null if a cycle exists.
+   * Uses Kahn's algorithm (BFS topological sort).
+   */
+  // Your code here
+  return null;
+}
+`,
+    testCodeTs: `const { buildOrder } = require('./solution');
+
+function isValidOrder(
+  order: string[] | null,
+  projects: string[],
+  dependencies: [string, string][]
+): boolean {
+  if (order === null) return false;
+  if ([...order].sort().join(',') !== [...projects].sort().join(',')) return false;
+  const pos: Record<string, number> = {};
+  order.forEach((p, i) => { pos[p] = i; });
+  for (const [before, after] of dependencies) {
+    if (pos[before] >= pos[after]) return false;
+  }
+  return true;
+}
+
+describe('buildOrder', () => {
+  it('handles standard dependency graph', () => {
+    const projects = ['a', 'b', 'c', 'd', 'e', 'f'];
+    const deps: [string, string][] = [['a','d'],['f','b'],['b','d'],['f','a'],['d','c']];
+    const result = buildOrder(projects, deps);
+    expect(isValidOrder(result, projects, deps)).toBe(true);
+  });
+
+  it('handles no dependencies', () => {
+    const projects = ['a', 'b', 'c'];
+    const deps: [string, string][] = [];
+    const result = buildOrder(projects, deps);
+    expect(isValidOrder(result, projects, deps)).toBe(true);
+  });
+
+  it('returns null for a cycle', () => {
+    const projects = ['a', 'b'];
+    const deps: [string, string][] = [['a','b'],['b','a']];
+    expect(buildOrder(projects, deps)).toBeNull();
+  });
+
+  it('handles single project', () => {
+    const projects = ['a'];
+    const deps: [string, string][] = [];
+    const result = buildOrder(projects, deps);
+    expect(isValidOrder(result, projects, deps)).toBe(true);
+  });
+});
+`,
+    solutionTs: `export function buildOrder(
+  projects: string[],
+  dependencies: [string, string][]
+): string[] | null {
+  const graph: Record<string, string[]> = {};
+  const inDegree: Record<string, number> = {};
+  for (const p of projects) {
+    graph[p] = [];
+    inDegree[p] = 0;
+  }
+  for (const [before, after] of dependencies) {
+    graph[before].push(after);
+    inDegree[after] += 1;
+  }
+
+  const queue: string[] = projects.filter(p => inDegree[p] === 0);
+  const order: string[] = [];
+
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    order.push(node);
+    for (const neighbor of graph[node]) {
+      inDegree[neighbor] -= 1;
+      if (inDegree[neighbor] === 0) {
+        queue.push(neighbor);
+      }
+    }
+  }
+
+  return order.length === projects.length ? order : null;
+}
+`,
     hints: [
       "Kahn's algorithm: start with nodes that have no dependencies (in-degree 0).",
       "After 'processing' a node, reduce the in-degree of its dependents.",
@@ -1308,6 +2092,78 @@ run_tests()
         if n is slow:
             return i
     return -1
+`,
+    starterCodeTs: `export function findLoopStart(values: number[], loopStartIdx: number): number {
+  /**
+   * Given a list where index loopStartIdx creates a cycle
+   * (the "tail" connects back to loopStartIdx), find the loop start.
+   *
+   * Use Floyd's cycle detection algorithm.
+   * Returns the index of the loop start node.
+   */
+  // Your code here
+  return -1;
+}
+`,
+    testCodeTs: `const { findLoopStart } = require('./solution');
+
+describe('findLoopStart', () => {
+  it('finds loop start at index 2', () => {
+    expect(findLoopStart([1, 2, 3, 4, 5], 2)).toBe(2);
+  });
+
+  it('finds loop start at index 0', () => {
+    expect(findLoopStart([1, 2, 3, 4, 5], 0)).toBe(0);
+  });
+
+  it('finds loop start at index 4', () => {
+    expect(findLoopStart([1, 2, 3, 4, 5], 4)).toBe(4);
+  });
+
+  it('finds loop start in 2-element list', () => {
+    expect(findLoopStart([1, 2], 0)).toBe(0);
+  });
+
+  it('finds loop start at index 1 in 3-element list', () => {
+    expect(findLoopStart([1, 2, 3], 1)).toBe(1);
+  });
+});
+`,
+    solutionTs: `export function findLoopStart(values: number[], loopStartIdx: number): number {
+  // Build linked list
+  class Node {
+    val: number;
+    next: Node | null = null;
+    constructor(v: number) { this.val = v; }
+  }
+
+  const nodes = values.map(v => new Node(v));
+  for (let i = 0; i < nodes.length - 1; i++) {
+    nodes[i].next = nodes[i + 1];
+  }
+  nodes[nodes.length - 1].next = nodes[loopStartIdx]; // create loop
+
+  // Floyd's algorithm
+  let slow: Node = nodes[0];
+  let fast: Node = nodes[0];
+  do {
+    slow = slow.next!;
+    fast = fast.next!.next!;
+  } while (slow !== fast);
+
+  // Find loop start: move one pointer to head
+  slow = nodes[0];
+  while (slow !== fast) {
+    slow = slow.next!;
+    fast = fast.next!;
+  }
+
+  // Find index
+  for (let i = 0; i < nodes.length; i++) {
+    if (nodes[i] === slow) return i;
+  }
+  return -1;
+}
 `,
     hints: [
       "Use Floyd's cycle detection: fast pointer moves 2x, slow moves 1x.",
@@ -1407,6 +2263,79 @@ def list_of_depths(values: list) -> list:
             if node.right: q.append(node.right)
         result.append(level)
     return result
+`,
+    starterCodeTs: `export function listOfDepths(values: number[]): number[][] {
+  /**
+   * Build a BST from values (insert in order), then return
+   * a list of lists: one list per depth level (BFS order).
+   *
+   * listOfDepths([4, 2, 6, 1, 3, 5, 7]) => [[4], [2, 6], [1, 3, 5, 7]]
+   */
+  // Your code here
+  return [];
+}
+`,
+    testCodeTs: `const { listOfDepths } = require('./solution');
+
+describe('listOfDepths', () => {
+  it('handles a balanced BST', () => {
+    expect(listOfDepths([4, 2, 6, 1, 3, 5, 7])).toEqual([[4], [2, 6], [1, 3, 5, 7]]);
+  });
+
+  it('handles single element', () => {
+    expect(listOfDepths([1])).toEqual([[1]]);
+  });
+
+  it('handles empty array', () => {
+    expect(listOfDepths([])).toEqual([]);
+  });
+
+  it('handles small BST', () => {
+    expect(listOfDepths([2, 1, 3])).toEqual([[2], [1, 3]]);
+  });
+
+  it('handles larger balanced BST', () => {
+    expect(listOfDepths([5, 3, 7, 2, 4, 6, 8])).toEqual([[5], [3, 7], [2, 4, 6, 8]]);
+  });
+});
+`,
+    solutionTs: `export function listOfDepths(values: number[]): number[][] {
+  if (values.length === 0) return [];
+
+  class Node {
+    val: number;
+    left: Node | null = null;
+    right: Node | null = null;
+    constructor(v: number) { this.val = v; }
+  }
+
+  function insert(root: Node | null, v: number): Node {
+    if (!root) return new Node(v);
+    if (v < root.val) root.left = insert(root.left, v);
+    else root.right = insert(root.right, v);
+    return root;
+  }
+
+  let root: Node | null = null;
+  for (const v of values) {
+    root = insert(root, v);
+  }
+
+  const result: number[][] = [];
+  const queue: Node[] = [root!];
+  while (queue.length > 0) {
+    const level: number[] = [];
+    const size = queue.length;
+    for (let i = 0; i < size; i++) {
+      const node = queue.shift()!;
+      level.push(node.val);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    result.push(level);
+  }
+  return result;
+}
 `,
     hints: [
       'BFS naturally visits nodes level by level.',
@@ -1529,6 +2458,82 @@ run_tests()
 
     return validate(root, float('-inf'), float('inf'))
 `,
+    starterCodeTs: `export class TreeNode {
+  val: number;
+  left: TreeNode | null = null;
+  right: TreeNode | null = null;
+  constructor(val: number) { this.val = val; }
+}
+
+export function isValidBST(root: TreeNode | null): boolean {
+  /**
+   * Validate that the given binary tree satisfies BST properties.
+   * Uses the min/max bounds approach.
+   */
+  // Your code here
+  return false;
+}
+`,
+    testCodeTs: `const { TreeNode, isValidBST } = require('./solution');
+
+describe('isValidBST', () => {
+  it('validates a correct BST (5,3,7,2,4)', () => {
+    const root = new TreeNode(5);
+    root.left = new TreeNode(3);
+    root.right = new TreeNode(7);
+    root.left.left = new TreeNode(2);
+    root.left.right = new TreeNode(4);
+    expect(isValidBST(root)).toBe(true);
+  });
+
+  it('rejects an invalid tree (6 in wrong position)', () => {
+    const root = new TreeNode(5);
+    root.left = new TreeNode(3);
+    root.right = new TreeNode(7);
+    root.left.left = new TreeNode(2);
+    root.left.right = new TreeNode(6); // 6 > 5, wrong side!
+    expect(isValidBST(root)).toBe(false);
+  });
+
+  it('validates a single node', () => {
+    expect(isValidBST(new TreeNode(1))).toBe(true);
+  });
+
+  it('validates null as a valid BST', () => {
+    expect(isValidBST(null)).toBe(true);
+  });
+
+  it('validates a BST built from [5,3,7,2,4]', () => {
+    function insert(root: any, v: number): any {
+      if (!root) return new TreeNode(v);
+      if (v < root.val) root.left = insert(root.left, v);
+      else root.right = insert(root.right, v);
+      return root;
+    }
+    let r = null;
+    for (const v of [5, 3, 7, 2, 4]) {
+      r = insert(r, v);
+    }
+    expect(isValidBST(r)).toBe(true);
+  });
+});
+`,
+    solutionTs: `export class TreeNode {
+  val: number;
+  left: TreeNode | null = null;
+  right: TreeNode | null = null;
+  constructor(val: number) { this.val = val; }
+}
+
+export function isValidBST(root: TreeNode | null): boolean {
+  function validate(node: TreeNode | null, lo: number, hi: number): boolean {
+    if (!node) return true;
+    if (node.val <= lo || node.val >= hi) return false;
+    return validate(node.left, lo, node.val) && validate(node.right, node.val, hi);
+  }
+  return validate(root, -Infinity, Infinity);
+}
+`,
     hints: [
       'Local parent-child checks are not enough — a node must satisfy ALL ancestor constraints.',
       'Pass down a (min, max) range for each node: left child inherits max=parent, right child inherits min=parent.',
@@ -1630,6 +2635,100 @@ run_tests()
     anc, _, _ = helper(root, val_a, val_b)
     return anc.val if anc else None
 `,
+    starterCodeTs: `export class TreeNode {
+  val: number;
+  left: TreeNode | null = null;
+  right: TreeNode | null = null;
+  constructor(val: number) { this.val = val; }
+}
+
+export function firstCommonAncestor(
+  root: TreeNode | null,
+  valA: number,
+  valB: number
+): number | null {
+  /**
+   * Find the first common ancestor of nodes with values valA and valB.
+   * Returns the value of the common ancestor, or null if not found.
+   */
+  // Your code here
+  return null;
+}
+`,
+    testCodeTs: `const { TreeNode, firstCommonAncestor } = require('./solution');
+
+describe('firstCommonAncestor', () => {
+  // Build tree:    8
+  //              / \\
+  //             3   1
+  //            / \\
+  //           2   4
+  function buildTree() {
+    const root = new TreeNode(8);
+    root.left = new TreeNode(3);
+    root.right = new TreeNode(1);
+    root.left.left = new TreeNode(2);
+    root.left.right = new TreeNode(4);
+    return root;
+  }
+
+  it('FCA(2, 4) = 3', () => {
+    expect(firstCommonAncestor(buildTree(), 2, 4)).toBe(3);
+  });
+
+  it('FCA(2, 3) = 3', () => {
+    expect(firstCommonAncestor(buildTree(), 2, 3)).toBe(3);
+  });
+
+  it('FCA(2, 1) = 8', () => {
+    expect(firstCommonAncestor(buildTree(), 2, 1)).toBe(8);
+  });
+
+  it('FCA(3, 1) = 8', () => {
+    expect(firstCommonAncestor(buildTree(), 3, 1)).toBe(8);
+  });
+
+  it('FCA(2, 8) = 8', () => {
+    expect(firstCommonAncestor(buildTree(), 2, 8)).toBe(8);
+  });
+
+  it('FCA(3, 4) = 3', () => {
+    expect(firstCommonAncestor(buildTree(), 3, 4)).toBe(3);
+  });
+});
+`,
+    solutionTs: `export class TreeNode {
+  val: number;
+  left: TreeNode | null = null;
+  right: TreeNode | null = null;
+  constructor(val: number) { this.val = val; }
+}
+
+export function firstCommonAncestor(
+  root: TreeNode | null,
+  valA: number,
+  valB: number
+): number | null {
+  function helper(node: TreeNode | null, a: number, b: number): [TreeNode | null, boolean, boolean] {
+    if (!node) return [null, false, false];
+
+    const [leftAnc, la, lb] = helper(node.left, a, b);
+    if (leftAnc) return [leftAnc, true, true];
+
+    const [rightAnc, ra, rb] = helper(node.right, a, b);
+    if (rightAnc) return [rightAnc, true, true];
+
+    const foundA = la || ra || node.val === a;
+    const foundB = lb || rb || node.val === b;
+
+    if (foundA && foundB) return [node, true, true];
+    return [null, foundA, foundB];
+  }
+
+  const [anc] = helper(root, valA, valB);
+  return anc ? anc.val : null;
+}
+`,
     hints: [
       'Post-order DFS: process children before the current node.',
       'Each call reports back whether it found node a and/or node b.',
@@ -1701,6 +2800,56 @@ run_tests()
         for perm in permutations(rest):
             result.append(char + perm)
     return result
+`,
+    starterCodeTs: `export function permutations(s: string): string[] {
+  /**
+   * Return all permutations of the string s (unique characters).
+   * Return as a sorted list of strings.
+   */
+  // Your code here
+  return [];
+}
+`,
+    testCodeTs: `const { permutations } = require('./solution');
+
+describe('permutations', () => {
+  it('handles empty string', () => {
+    expect(permutations('')).toEqual(['']);
+  });
+
+  it('handles single character', () => {
+    expect(permutations('a')).toEqual(['a']);
+  });
+
+  it('handles two characters', () => {
+    expect([...permutations('ab')].sort()).toEqual(['ab', 'ba']);
+  });
+
+  it('handles three characters', () => {
+    expect([...permutations('abc')].sort()).toEqual(
+      ['abc', 'acb', 'bac', 'bca', 'cab', 'cba']
+    );
+  });
+
+  it('produces 24 permutations for 4 characters', () => {
+    expect(permutations('abcd').length).toBe(24);
+  });
+});
+`,
+    solutionTs: `export function permutations(s: string): string[] {
+  if (s.length === 0) return [''];
+  if (s.length === 1) return [s];
+
+  const result: string[] = [];
+  for (let i = 0; i < s.length; i++) {
+    const char = s[i];
+    const rest = s.slice(0, i) + s.slice(i + 1);
+    for (const perm of permutations(rest)) {
+      result.push(char + perm);
+    }
+  }
+  return result;
+}
 `,
     hints: [
       "For each character, 'choose' it as the first character, then recursively permute the rest.",
@@ -1818,6 +2967,135 @@ def events_per_hour(events: list) -> dict:
         hour = int(e["timestamp"].split("T")[1].split(":")[0])
         hourly[hour] = hourly.get(hour, 0) + 1
     return hourly
+`,
+    starterCodeTs: `export interface Event {
+  timestamp: string;
+  event_type: string;
+  user_id: string;
+  properties: Record<string, unknown>;
+}
+
+export function summarize(events: Event[]): { event_type: string; count: number }[] {
+  /**
+   * Group events by event_type and count occurrences.
+   * Return list of { event_type, count } sorted by count descending.
+   */
+  // Your code here
+  return [];
+}
+
+export function mostActiveUser(events: Event[]): string {
+  /**
+   * Return the user_id with the most events.
+   */
+  // Your code here
+  return '';
+}
+
+export function eventsPerHour(events: Event[]): Record<number, number> {
+  /**
+   * Return a record { hour: count } where hour is 0-23.
+   * Only include hours that have events.
+   */
+  // Your code here
+  return {};
+}
+`,
+    testCodeTs: `const { summarize, mostActiveUser, eventsPerHour } = require('./solution');
+
+const events = [
+  { timestamp: '2024-02-12T10:30:00Z', event_type: 'click',    user_id: 'u1', properties: {} },
+  { timestamp: '2024-02-12T10:45:00Z', event_type: 'click',    user_id: 'u2', properties: {} },
+  { timestamp: '2024-02-12T11:00:00Z', event_type: 'purchase', user_id: 'u1', properties: {} },
+  { timestamp: '2024-02-12T14:00:00Z', event_type: 'click',    user_id: 'u1', properties: {} },
+  { timestamp: '2024-02-12T14:30:00Z', event_type: 'view',     user_id: 'u3', properties: {} },
+  { timestamp: '2024-02-12T14:45:00Z', event_type: 'view',     user_id: 'u1', properties: {} },
+];
+
+describe('summarize', () => {
+  it('counts click events as 3', () => {
+    const summary = summarize(events);
+    const dict: Record<string, number> = {};
+    summary.forEach((s: any) => { dict[s.event_type] = s.count; });
+    expect(dict['click']).toBe(3);
+  });
+
+  it('counts purchase events as 1', () => {
+    const summary = summarize(events);
+    const dict: Record<string, number> = {};
+    summary.forEach((s: any) => { dict[s.event_type] = s.count; });
+    expect(dict['purchase']).toBe(1);
+  });
+
+  it('counts view events as 2', () => {
+    const summary = summarize(events);
+    const dict: Record<string, number> = {};
+    summary.forEach((s: any) => { dict[s.event_type] = s.count; });
+    expect(dict['view']).toBe(2);
+  });
+});
+
+describe('mostActiveUser', () => {
+  it('returns u1 as most active', () => {
+    expect(mostActiveUser(events)).toBe('u1');
+  });
+});
+
+describe('eventsPerHour', () => {
+  it('counts 2 events in hour 10', () => {
+    expect(eventsPerHour(events)[10]).toBe(2);
+  });
+
+  it('counts 1 event in hour 11', () => {
+    expect(eventsPerHour(events)[11]).toBe(1);
+  });
+
+  it('counts 3 events in hour 14', () => {
+    expect(eventsPerHour(events)[14]).toBe(3);
+  });
+});
+`,
+    solutionTs: `export interface Event {
+  timestamp: string;
+  event_type: string;
+  user_id: string;
+  properties: Record<string, unknown>;
+}
+
+export function summarize(events: Event[]): { event_type: string; count: number }[] {
+  const counts: Record<string, number> = {};
+  for (const e of events) {
+    counts[e.event_type] = (counts[e.event_type] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([event_type, count]) => ({ event_type, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+export function mostActiveUser(events: Event[]): string {
+  const counts: Record<string, number> = {};
+  for (const e of events) {
+    counts[e.user_id] = (counts[e.user_id] || 0) + 1;
+  }
+  let maxUser = '';
+  let maxCount = 0;
+  for (const [user, count] of Object.entries(counts)) {
+    if (count > maxCount) {
+      maxCount = count;
+      maxUser = user;
+    }
+  }
+  return maxUser;
+}
+
+export function eventsPerHour(events: Event[]): Record<number, number> {
+  const hourly: Record<number, number> = {};
+  for (const e of events) {
+    const hour = parseInt(e.timestamp.split('T')[1].split(':')[0], 10);
+    hourly[hour] = (hourly[hour] || 0) + 1;
+  }
+  return hourly;
+}
 `,
     hints: [
       'Part 1: Use a dictionary to count each event_type.',
@@ -1988,6 +3266,200 @@ def calculate_cost(endpoint: str, graph: dict, memo: dict = None) -> int:
 
     return dfs(endpoint, set())
 `,
+    starterCodeTs: `// Part 1: Binary Search for tier
+export function findTier(
+  volume: number,
+  tiers: { tier: string; max_requests: number }[]
+): string | null {
+  /**
+   * Find the minimum tier that can handle 'volume' requests.
+   * Tiers are sorted by max_requests ascending.
+   * Return tier name, or null if volume exceeds all tiers.
+   */
+  // Your code here
+  return null;
+}
+
+// Part 2: Recursive capacity
+export interface InfraNode {
+  name: string;
+  max_capacity: number;
+  children: InfraNode[];
+}
+
+export function totalLeafCapacity(node: InfraNode): number {
+  /**
+   * Sum max_capacity of all LEAF nodes (no children) recursively.
+   */
+  // Your code here
+  return 0;
+}
+
+// Part 3: Endpoint cost (DFS with memoization)
+export interface EndpointInfo {
+  base_cost: number;
+  calls: string[];
+}
+
+export function calculateCost(
+  endpoint: string,
+  graph: Record<string, EndpointInfo>,
+  memo: Record<string, number> = {}
+): number {
+  /**
+   * Total cost = base_cost + sum of all dependency costs.
+   * Return -1 if a circular dependency is detected.
+   */
+  // Your code here
+  return 0;
+}
+`,
+    testCodeTs: `const { findTier, totalLeafCapacity, calculateCost } = require('./solution');
+
+const tiers = [
+  { tier: 'free',       max_requests: 100 },
+  { tier: 'basic',      max_requests: 1000 },
+  { tier: 'pro',        max_requests: 10000 },
+  { tier: 'enterprise', max_requests: 100000 },
+];
+
+describe('findTier', () => {
+  it('returns free for volume 50', () => {
+    expect(findTier(50, tiers)).toBe('free');
+  });
+
+  it('returns free for volume 100', () => {
+    expect(findTier(100, tiers)).toBe('free');
+  });
+
+  it('returns basic for volume 150', () => {
+    expect(findTier(150, tiers)).toBe('basic');
+  });
+
+  it('returns pro for volume 5000', () => {
+    expect(findTier(5000, tiers)).toBe('pro');
+  });
+
+  it('returns null for volume 200000', () => {
+    expect(findTier(200000, tiers)).toBeNull();
+  });
+});
+
+describe('totalLeafCapacity', () => {
+  it('sums leaf capacities of infra tree to 100000', () => {
+    const infra = {
+      name: 'global', max_capacity: 100000,
+      children: [
+        { name: 'us', max_capacity: 40000, children: [
+          { name: 'us-1', max_capacity: 20000, children: [] },
+          { name: 'us-2', max_capacity: 20000, children: [] },
+        ]},
+        { name: 'eu', max_capacity: 60000, children: [
+          { name: 'eu-1', max_capacity: 30000, children: [] },
+          { name: 'eu-2', max_capacity: 30000, children: [] },
+        ]},
+      ],
+    };
+    expect(totalLeafCapacity(infra)).toBe(100000);
+  });
+
+  it('returns capacity of a single leaf node', () => {
+    expect(totalLeafCapacity({ name: 'single', max_capacity: 42, children: [] })).toBe(42);
+  });
+});
+
+describe('calculateCost', () => {
+  const endpoints = {
+    '/user/profile':       { base_cost: 1, calls: ['/user/settings', '/user/avatar'] },
+    '/user/settings':      { base_cost: 1, calls: [] },
+    '/user/avatar':        { base_cost: 2, calls: [] },
+    '/user/dashboard':     { base_cost: 1, calls: ['/user/profile', '/user/notifications'] },
+    '/user/notifications': { base_cost: 3, calls: ['/user/settings'] },
+  };
+
+  it('calculates /user/profile cost as 4', () => {
+    expect(calculateCost('/user/profile', endpoints, {})).toBe(4);
+  });
+
+  it('calculates /user/settings cost as 1', () => {
+    expect(calculateCost('/user/settings', endpoints, {})).toBe(1);
+  });
+
+  it('calculates /user/dashboard cost as 9', () => {
+    expect(calculateCost('/user/dashboard', endpoints, {})).toBe(9);
+  });
+
+  it('returns -1 for cycle', () => {
+    const cycleGraph = {
+      '/a': { base_cost: 1, calls: ['/b'] },
+      '/b': { base_cost: 1, calls: ['/a'] },
+    };
+    expect(calculateCost('/a', cycleGraph, {})).toBe(-1);
+  });
+});
+`,
+    solutionTs: `// Part 1: Binary Search for tier
+export function findTier(
+  volume: number,
+  tiers: { tier: string; max_requests: number }[]
+): string | null {
+  let lo = 0;
+  let hi = tiers.length - 1;
+  let result: string | null = null;
+  while (lo <= hi) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (tiers[mid].max_requests >= volume) {
+      result = tiers[mid].tier;
+      hi = mid - 1;
+    } else {
+      lo = mid + 1;
+    }
+  }
+  return result;
+}
+
+// Part 2: Recursive capacity
+export interface InfraNode {
+  name: string;
+  max_capacity: number;
+  children: InfraNode[];
+}
+
+export function totalLeafCapacity(node: InfraNode): number {
+  if (node.children.length === 0) return node.max_capacity;
+  return node.children.reduce((sum, child) => sum + totalLeafCapacity(child), 0);
+}
+
+// Part 3: Endpoint cost (DFS with memoization)
+export interface EndpointInfo {
+  base_cost: number;
+  calls: string[];
+}
+
+export function calculateCost(
+  endpoint: string,
+  graph: Record<string, EndpointInfo>,
+  memo: Record<string, number> = {}
+): number {
+  function dfs(ep: string, visiting: Set<string>): number {
+    if (memo[ep] !== undefined) return memo[ep];
+    if (!(ep in graph)) return 0;
+    if (visiting.has(ep)) return -1;
+
+    visiting.add(ep);
+    let cost = graph[ep].base_cost;
+    for (const dep of graph[ep].calls) {
+      const depCost = dfs(dep, visiting);
+      if (depCost === -1) return -1;
+      cost += depCost;
+    }
+    visiting.delete(ep);
+    memo[ep] = cost;
+    return cost;
+  }
+  return dfs(endpoint, new Set<string>());
+}
+`,
     hints: [
       'Part 1: Binary search — find the leftmost tier where max_requests >= volume.',
       'Part 2: Recursion base case is a leaf node (no children). Otherwise sum children.',
@@ -2126,6 +3598,139 @@ def find_critical_path(agents: list, durations: dict, dependencies: list) -> int
             dp[neighbor] = max(dp[neighbor], dp[agent] + durations[neighbor])
 
     return max(dp.values())
+`,
+    starterCodeTs: `export function getExecutionOrder(
+  agents: string[],
+  dependencies: [string, string][]
+): string[] | null {
+  /**
+   * Topological sort of agents given dependencies.
+   * dependencies = [["a", "b"]] means a must run before b.
+   * Return ordered list, or null if cycle detected.
+   */
+  // Your code here
+  return null;
+}
+
+export function findCriticalPath(
+  agents: string[],
+  durations: Record<string, number>,
+  dependencies: [string, string][]
+): number {
+  /**
+   * Find the minimum time to run all agents (longest path in DAG).
+   * Returns the total duration of the critical path.
+   */
+  // Your code here
+  return 0;
+}
+`,
+    testCodeTs: `const { getExecutionOrder, findCriticalPath } = require('./solution');
+
+function validOrder(
+  order: string[] | null,
+  agents: string[],
+  deps: [string, string][]
+): boolean {
+  if (order === null || [...order].sort().join(',') !== [...agents].sort().join(',')) return false;
+  const pos: Record<string, number> = {};
+  order.forEach((a: string, i: number) => { pos[a] = i; });
+  return deps.every(([a, b]) => pos[b] > pos[a]);
+}
+
+describe('getExecutionOrder', () => {
+  it('handles linear chain', () => {
+    const agents = ['fetch', 'preprocess', 'model', 'postprocess'];
+    const deps: [string, string][] = [['fetch','preprocess'],['preprocess','model'],['model','postprocess']];
+    const order = getExecutionOrder(agents, deps);
+    expect(validOrder(order, agents, deps)).toBe(true);
+  });
+
+  it('handles parallel merge', () => {
+    const agents = ['a', 'b', 'c', 'd'];
+    const deps: [string, string][] = [['a','c'],['b','c'],['c','d']];
+    const order = getExecutionOrder(agents, deps);
+    expect(validOrder(order, agents, deps)).toBe(true);
+  });
+
+  it('returns null for cycle', () => {
+    const agents = ['x', 'y', 'z'];
+    const deps: [string, string][] = [['x','y'],['y','z'],['z','x']];
+    expect(getExecutionOrder(agents, deps)).toBeNull();
+  });
+});
+
+describe('findCriticalPath', () => {
+  it('linear chain: 3+2+5+1 = 11', () => {
+    const agents = ['fetch', 'preprocess', 'model', 'postprocess'];
+    const deps: [string, string][] = [['fetch','preprocess'],['preprocess','model'],['model','postprocess']];
+    const durations = { fetch: 3, preprocess: 2, model: 5, postprocess: 1 };
+    expect(findCriticalPath(agents, durations, deps)).toBe(11);
+  });
+
+  it('parallel: max(2,4)+3+1 = 8', () => {
+    const agents = ['a', 'b', 'c', 'd'];
+    const deps: [string, string][] = [['a','c'],['b','c'],['c','d']];
+    const durations = { a: 2, b: 4, c: 3, d: 1 };
+    expect(findCriticalPath(agents, durations, deps)).toBe(8);
+  });
+});
+`,
+    solutionTs: `export function getExecutionOrder(
+  agents: string[],
+  dependencies: [string, string][]
+): string[] | null {
+  const graph: Record<string, string[]> = {};
+  const inDegree: Record<string, number> = {};
+  for (const a of agents) {
+    graph[a] = [];
+    inDegree[a] = 0;
+  }
+  for (const [before, after] of dependencies) {
+    graph[before].push(after);
+    inDegree[after] += 1;
+  }
+
+  const queue: string[] = agents.filter(a => inDegree[a] === 0);
+  const order: string[] = [];
+  while (queue.length > 0) {
+    const node = queue.shift()!;
+    order.push(node);
+    for (const neighbor of graph[node]) {
+      inDegree[neighbor] -= 1;
+      if (inDegree[neighbor] === 0) {
+        queue.push(neighbor);
+      }
+    }
+  }
+  return order.length === agents.length ? order : null;
+}
+
+export function findCriticalPath(
+  agents: string[],
+  durations: Record<string, number>,
+  dependencies: [string, string][]
+): number {
+  const order = getExecutionOrder(agents, dependencies);
+  if (!order) return -1;
+
+  const graph: Record<string, string[]> = {};
+  for (const a of agents) graph[a] = [];
+  for (const [before, after] of dependencies) {
+    graph[before].push(after);
+  }
+
+  const dp: Record<string, number> = {};
+  for (const a of agents) dp[a] = durations[a];
+
+  for (const agent of order) {
+    for (const neighbor of graph[agent]) {
+      dp[neighbor] = Math.max(dp[neighbor], dp[agent] + durations[neighbor]);
+    }
+  }
+
+  return Math.max(...Object.values(dp));
+}
 `,
     hints: [
       "Part 1: Classic Kahn's topological sort — queue nodes with in-degree 0.",

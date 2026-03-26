@@ -17,11 +17,24 @@ const DIFFICULTY_COLORS = {
   hard: 'text-red-400 bg-red-900/30 border-red-800',
 };
 
+type Language = 'python' | 'typescript';
+
+const LANG_STORAGE_KEY = 'interview-prep-language';
+
+function getSavedLanguage(): Language {
+  try {
+    const val = localStorage.getItem(LANG_STORAGE_KEY);
+    if (val === 'typescript') return 'typescript';
+  } catch { /* ignore */ }
+  return 'python';
+}
+
 export default function Problem() {
   const { problemId } = useParams<{ problemId: string }>();
   const problem = problems.find((p) => p.id === problemId);
   const { isComplete, markComplete, saveCode, getSavedCode } = useProgress();
 
+  const [language, setLanguage] = useState<Language>(getSavedLanguage);
   const [code, setCode] = useState('');
   const [testResult, setTestResult] = useState<RunResult | null>(null);
   const [showSolution, setShowSolution] = useState(false);
@@ -29,26 +42,62 @@ export default function Problem() {
   const [activeTab, setActiveTab] = useState<'description' | 'editor' | 'tests'>('editor');
   const getCodeRef = useRef<(() => string) | null>(null);
 
+  const hasTs = !!(problem?.starterCodeTs && problem?.testCodeTs);
+
+  // Effective language: fall back to Python if no TS version
+  const effectiveLang = hasTs ? language : 'python';
+
+  const getStarterCode = useCallback(() => {
+    if (!problem) return '';
+    return effectiveLang === 'typescript' ? (problem.starterCodeTs ?? problem.starterCode) : problem.starterCode;
+  }, [problem, effectiveLang]);
+
+  const getTestCode = useCallback(() => {
+    if (!problem) return '';
+    return effectiveLang === 'typescript' ? (problem.testCodeTs ?? problem.testCode) : problem.testCode;
+  }, [problem, effectiveLang]);
+
+  const getSolution = useCallback(() => {
+    if (!problem) return '';
+    return effectiveLang === 'typescript' ? (problem.solutionTs ?? problem.solution) : problem.solution;
+  }, [problem, effectiveLang]);
+
+  // Storage key includes language so Python and TS code are saved separately
+  const storageKey = problem ? `${problem.id}:${effectiveLang}` : '';
+
   useEffect(() => {
     if (!problem) return;
-    const saved = getSavedCode(problem.id);
-    setCode(saved ?? problem.starterCode);
+    const saved = getSavedCode(storageKey);
+    setCode(saved ?? getStarterCode());
     setTestResult(null);
     setShowSolution(false);
     setOpenHint(null);
-  }, [problemId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [problemId, effectiveLang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCodeChange = useCallback(
     (val: string) => {
       setCode(val);
-      if (problem) saveCode(problem.id, val);
+      if (storageKey) saveCode(storageKey, val);
     },
-    [problem, saveCode]
+    [storageKey, saveCode]
   );
 
   const handleAllPassed = useCallback(() => {
     if (problem) markComplete(problem.id);
   }, [problem, markComplete]);
+
+  const handleLanguageChange = useCallback((lang: Language) => {
+    setLanguage(lang);
+    try {
+      localStorage.setItem(LANG_STORAGE_KEY, lang);
+    } catch { /* ignore */ }
+  }, []);
+
+  const handleGiveAnswer = useCallback(() => {
+    const solution = getSolution();
+    setCode(solution);
+    if (storageKey) saveCode(storageKey, solution);
+  }, [getSolution, storageKey, saveCode]);
 
   if (!problem) {
     return (
@@ -62,6 +111,7 @@ export default function Problem() {
   }
 
   const done = isComplete(problem.id);
+  const fileExtension = effectiveLang === 'typescript' ? 'ts' : 'py';
 
   return (
     <div className="h-[calc(100vh-3.5rem)] flex flex-col">
@@ -100,18 +150,45 @@ export default function Problem() {
           </span>
           <span className="text-xs text-gray-500 hidden md:inline shrink-0">{problem.category}</span>
         </div>
-        {done && (
-          <div className="flex items-center gap-1.5 text-emerald-400 text-sm shrink-0 ml-2">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="hidden sm:inline">Solved</span>
-          </div>
-        )}
+        <div className="flex items-center gap-3 shrink-0 ml-2">
+          {/* Language toggle */}
+          {hasTs && (
+            <div className="flex items-center bg-gray-800 rounded-lg p-0.5">
+              <button
+                onClick={() => handleLanguageChange('python')}
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
+                  effectiveLang === 'python'
+                    ? 'bg-gray-700 text-white'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                Python
+              </button>
+              <button
+                onClick={() => handleLanguageChange('typescript')}
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
+                  effectiveLang === 'typescript'
+                    ? 'bg-gray-700 text-white'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                TypeScript
+              </button>
+            </div>
+          )}
+          {done && (
+            <div className="flex items-center gap-1.5 text-emerald-400 text-sm">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="hidden sm:inline">Solved</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Mobile tab bar */}
@@ -199,10 +276,10 @@ export default function Problem() {
               <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
               <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
               <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
-              <span className="text-xs text-gray-500 ml-2 font-mono">solution.py</span>
+              <span className="text-xs text-gray-500 ml-2 font-mono">solution.{fileExtension}</span>
             </div>
             <button
-              onClick={() => handleCodeChange(problem.starterCode)}
+              onClick={() => handleCodeChange(getStarterCode())}
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
             >
               Reset
@@ -213,6 +290,7 @@ export default function Problem() {
             <CodeEditor
               value={code}
               onChange={handleCodeChange}
+              language={effectiveLang}
               onEditorMount={(getCode) => {
                 getCodeRef.current = getCode;
               }}
@@ -222,7 +300,8 @@ export default function Problem() {
           <div className="flex items-center justify-between px-4 py-3 border-t border-gray-800 bg-gray-900 shrink-0">
             <TestRunner
               getCode={() => getCodeRef.current?.() ?? code}
-              testCode={problem.testCode}
+              testCode={getTestCode()}
+              language={effectiveLang}
               onResult={(result) => {
                 setTestResult(result);
                 if (window.innerWidth < 768) setActiveTab('tests');
@@ -230,19 +309,27 @@ export default function Problem() {
               onAllPassed={handleAllPassed}
             />
 
-            <button
-              onClick={() => setShowSolution(!showSolution)}
-              className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
-            >
-              {showSolution ? 'Hide Solution' : 'Show Solution'}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleGiveAnswer}
+                className="text-xs text-amber-500 hover:text-amber-400 transition-colors"
+              >
+                Give Answer
+              </button>
+              <button
+                onClick={() => setShowSolution(!showSolution)}
+                className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+              >
+                {showSolution ? 'Hide Solution' : 'Show Solution'}
+              </button>
+            </div>
           </div>
 
           {showSolution && (
             <div className="border-t border-gray-800 bg-gray-950 p-4 max-h-64 overflow-y-auto">
-              <p className="text-xs text-yellow-500 mb-2 font-semibold">Solution</p>
+              <p className="text-xs text-yellow-500 mb-2 font-semibold">Solution ({effectiveLang === 'typescript' ? 'TypeScript' : 'Python'})</p>
               <pre className="text-xs font-mono text-gray-300 whitespace-pre-wrap">
-                {problem.solution}
+                {getSolution()}
               </pre>
             </div>
           )}
