@@ -309,7 +309,7 @@ return module.exports;
         try {
           const fn = new Function('__require', '__console', wrappedCode);
           const result = fn(
-            (req: string) => __require(resolved, req),
+            (from: string, req: string) => __require(from, req),
             {
               log: (...args: unknown[]) => stdout.push(args.map(String).join(' ')),
               error: (...args: unknown[]) => stderr.push(args.map(String).join(' ')),
@@ -356,7 +356,7 @@ return __testResults;
         try {
           const fn = new Function('__require', '__console', wrappedCode);
           const results = fn(
-            (req: string) => __require(testFile, req),
+            (from: string, req: string) => __require(from, req),
             {
               log: (...args: unknown[]) => stdout.push(args.map(String).join(' ')),
               error: (...args: unknown[]) => stderr.push(args.map(String).join(' ')),
